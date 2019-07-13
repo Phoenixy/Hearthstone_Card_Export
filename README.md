@@ -1,4 +1,4 @@
-# Hearthstone_Card_Export
+# Hearthstone Card Collection Export
 Hearthstone Deck Tracker plugin to export Hearthstone card collection.
 With this plugin you can export your Hearthstone card collection to a .CSV file!
 

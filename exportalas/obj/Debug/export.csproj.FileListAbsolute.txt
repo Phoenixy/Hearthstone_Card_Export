@@ -1,0 +1,97 @@
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\exportalas.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\exportalas.pdb
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\ControlzEx.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\CsvHelper.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\HearthDb.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\HearthMirror.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\MahApps.Metro.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\System.ValueTuple.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\ControlzEx.pdb
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\CsvHelper.xml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\HearthDb.pdb
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\HearthMirror.pdb
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\MahApps.Metro.pdb
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\MahApps.Metro.xml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\bin\Debug\System.ValueTuple.xml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\export.csprojAssemblyReference.cache
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\Controls\HSCollection.baml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\Controls\PluginMenuItem.g.cs
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\MainWindow.g.cs
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\exportalas_MarkupCompile.cache
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\exportalas_MarkupCompile.lref
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\Controls\PluginMenuItem.baml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\MainWindow.baml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\exportalas.g.resources
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\exportalas.Properties.Resources.resources
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\export.csproj.GenerateResource.cache
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\export.csproj.CoreCompileInputs.cache
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\export.csproj.CopyComplete
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\exportalas.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\Hearthstone-Collection-Tracker-master\Hearthstone Collection Tracker\obj\Debug\exportalas.pdb
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\exportalas.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\exportalas.pdb
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\ControlzEx.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\CsvHelper.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\HearthDb.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\HearthMirror.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\MahApps.Metro.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\System.ValueTuple.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\ControlzEx.pdb
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\CsvHelper.xml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\HearthDb.pdb
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\HearthMirror.pdb
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\MahApps.Metro.pdb
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\MahApps.Metro.xml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\System.ValueTuple.xml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\export.csprojAssemblyReference.cache
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\Controls\HSCollection.baml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\Controls\PluginMenuItem.g.cs
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\MainWindow.g.cs
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas_MarkupCompile.cache
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas_MarkupCompile.lref
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\Controls\PluginMenuItem.baml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\MainWindow.baml
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas.g.resources
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas.Properties.Resources.resources
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\export.csproj.GenerateResource.cache
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\export.csproj.CoreCompileInputs.cache
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\export.csproj.CopyComplete
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas.dll
+C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\exportalas.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\exportalas.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\ControlzEx.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\CsvHelper.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\MahApps.Metro.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\Newtonsoft.Json.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\System.ValueTuple.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\System.Windows.Interactivity.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\ControlzEx.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\CsvHelper.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\HearthDb.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\HearthMirror.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\MahApps.Metro.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\MahApps.Metro.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\Newtonsoft.Json.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Debug\System.ValueTuple.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\export.csprojAssemblyReference.cache
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\Controls\HSCollection.baml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\Controls\PluginMenuItem.g.cs
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\MainWindow.g.cs
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas_MarkupCompile.cache
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas_MarkupCompile.lref
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\Controls\PluginMenuItem.baml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\MainWindow.baml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas.g.resources
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas.Properties.Resources.resources
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\export.csproj.GenerateResource.cache
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\export.csproj.CoreCompileInputs.cache
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\export.csproj.CopyComplete
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\exportalas.pdb

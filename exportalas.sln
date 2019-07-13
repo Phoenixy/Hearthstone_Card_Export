@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "export", "exportalas\export.csproj", "{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		PluginsFolder|Any CPU = PluginsFolder|Any CPU
+		PluginsFolder|x86 = PluginsFolder|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.Debug|x86.Build.0 = Debug|Any CPU
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.PluginsFolder|Any CPU.ActiveCfg = PluginsFolder|Any CPU
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.PluginsFolder|Any CPU.Build.0 = PluginsFolder|Any CPU
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.PluginsFolder|x86.ActiveCfg = PluginsFolder|Any CPU
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.PluginsFolder|x86.Build.0 = PluginsFolder|Any CPU
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.Release|x86.ActiveCfg = Release|Any CPU
+		{14B0D152-BFF1-44EB-B25E-A5DED94E1F95}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {292A98FD-07D8-4863-A1A6-5F5CFE804E02}
+	EndGlobalSection
+EndGlobal

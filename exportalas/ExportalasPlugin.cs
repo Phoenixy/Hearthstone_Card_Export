@@ -40,7 +40,7 @@ namespace exportalas
 
         public string Author => "Bence Borovi (Thanks to Vasilev Konstantin)";
 
-        public static readonly Version PluginVersion = new Version(1, 0, 1);
+        public static readonly Version PluginVersion = new Version(1, 0, 2);
 
         public Version Version => PluginVersion;
 

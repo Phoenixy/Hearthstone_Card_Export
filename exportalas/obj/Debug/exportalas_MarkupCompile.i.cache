@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\Ashen\Desktop\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Debug\
 exportalas
 none
 false
@@ -13,7 +13,7 @@ DEBUG;TRACE
 3-1360412171
 11943626961
 91767040466
-731991285103
+73-264934626
 Controls\HSCollection.xaml;Controls\PluginMenuItem.xaml;MainWindow.xaml;
 
 True

@@ -5,6 +5,7 @@ using System.Windows;
 using HearthMirror;
 using CsvHelper;
 using System.Text;
+using System.Globalization;
 
 namespace exportalas
 {
@@ -23,7 +24,7 @@ namespace exportalas
         {
             if (Application.Current.Windows.OfType<MainWindow>().Any())
             {
-                MainWindow mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+                _ = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
             }
         }
 
@@ -36,7 +37,7 @@ namespace exportalas
             }
             catch (Exception e)
             {
-                var f = MessageBox.Show(e.Message, "Gyűjtemény exportálás", MessageBoxButton.OK);
+                _ = MessageBox.Show(e.Message, "Gyűjtemény exportálás", MessageBoxButton.OK);
             }
         }
 
@@ -51,7 +52,7 @@ namespace exportalas
 
         private void export_click(object sender, RoutedEventArgs e)
         {
-            var status = HearthMirror.Status.GetStatus().MirrorStatus;
+            var status = Status.GetStatus().MirrorStatus;
             if (status == HearthMirror.Enums.MirrorStatus.Ok)
             {
                 var goldenCollection = Reflection.GetCollection().Where(x => x.Premium);
@@ -62,7 +63,8 @@ namespace exportalas
                 using (var textWriter = new StreamWriter(filePath, false, Encoding.UTF8))
                 {
                     export_bt.IsEnabled = false;
-                    var csv = new CsvWriter(textWriter);
+                    var csv = new CsvWriter(textWriter, CultureInfo.InvariantCulture);
+                    csv.Configuration.Delimiter = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
 
                     csv.WriteField("Id");
                     csv.WriteField("Név");
@@ -86,7 +88,7 @@ namespace exportalas
                     }
                 }
                 export_bt.IsEnabled = true;
-                MessageBox.Show("Sikeres exportálás a gyujtemeny.csv fájlba!", "Sikeres");
+                MessageBox.Show("Sikeres exportálás! A gyujtemeny.csv fájl létrejött az asztalon!", "Sikeres");
             }
             else if (status == HearthMirror.Enums.MirrorStatus.ProcNotFound)
             {

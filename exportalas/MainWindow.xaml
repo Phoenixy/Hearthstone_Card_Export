@@ -259,7 +259,7 @@
                 <ListBoxItem Content="3. A Hearthstone Hungary-n menj be a profil gyűjteményedbe!" Background="{x:Null}" Focusable="False" IsTabStop="False" Style="{DynamicResource ListBoxItemStyle3}"/>
                 <ListBoxItem Content="4. Töltsd fel a gyujtemeny.csv fájlt a Hearthstone Hungary-re!" Background="{x:Null}" IsTabStop="False" Focusable="False" Style="{DynamicResource ListBoxItemStyle4}"/>
             </ListBox>
-            <Image HorizontalAlignment="Left" Height="156" Margin="50,0" Source="HSHU-logo.png" IsEnabled="False" VerticalAlignment="Center" UseLayoutRounding="True" ControlzEx:KeyboardNavigationEx.AlwaysShowFocusVisual="True"/>
+            <Image HorizontalAlignment="Left" Height="156" Margin="50,0" Source="HSHU-logo.png" IsEnabled="False" VerticalAlignment="Center" UseLayoutRounding="True" />
         </StackPanel>
     </ScrollViewer>
 </controls:MetroWindow>

@@ -10,5 +10,6 @@ You need to install Hearthstone Deck Tracker (https://hsreplay.net/downloads/) f
 
 
 The plugin:
-- https://github.com/Phoenixy/Hearthstone_Card_Export/raw/master/plugin/CsvHelper.dll (to make the exporting to CSV work)
-- https://github.com/Phoenixy/Hearthstone_Card_Export/raw/master/plugin/exportalas.dll (the plugin itself)
+- https://github.com/Phoenixy/Hearthstone_Card_Export/raw/master/plugin/exportalas.zip
+
+Download the zip file, open Hearthstone Deck Tracker, go to settings, plugins, then "drag and drop" the zip file.

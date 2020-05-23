@@ -4,7 +4,7 @@ With this plugin you can export your Hearthstone card collection to a .CSV file!
 
 !!! This plugin is primarily for Hungarian players!!! Ez a plugin magyar Hearthstone játékosoknak ajánlott!!!
 
-Instructions for Hungarians - Leírás a Hearthstone Hungary-n: https://hearthstonehungary.hu/node/automatikus-gyujtemeny-importalas-a-hearthstone-bol-a-hearthstone-hungary-re
+Instructions for Hungarians - Leírás a Hearthstone Hungary-n: https://hearthstonehungary.hu/other/collection-import
 
 You need to install Hearthstone Deck Tracker (https://hsreplay.net/downloads/) first, then install this plugin.
 

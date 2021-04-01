@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -6,6 +6,7 @@ using HearthMirror;
 using CsvHelper;
 using System.Text;
 using System.Globalization;
+using System.Runtime;
 
 namespace exportalas
 {
@@ -64,7 +65,6 @@ namespace exportalas
                 {
                     export_bt.IsEnabled = false;
                     var csv = new CsvWriter(textWriter, CultureInfo.InvariantCulture);
-                    csv.Configuration.Delimiter = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
 
                     csv.WriteField("Id");
                     csv.WriteField("Név");

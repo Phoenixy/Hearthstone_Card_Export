@@ -1,4 +1,4 @@
-﻿<controls:MetroWindow
+<controls:MetroWindow
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:exportalas"
@@ -12,7 +12,7 @@
         Icon="Internal\hshu-icon.ico"
         BorderThickness="1"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        ContentRendered="MainWindow_OnContentRendered" Closed="MainWindow_OnClosed" x:Name="PluginWindow" Height="316" Width="540" NonActiveBorderBrush="#FF427FED" OverlayBrush="#FF427FED" MinWidth="540" MinHeight="316" MaxHeight="316" MaxWidth="540" UseLayoutRounding="True" BorderBrush="#FF427FED" ResizeMode="CanMinimize" Title="Gyűjtemény exportálás">
+        ContentRendered="MainWindow_OnContentRendered" Closed="MainWindow_OnClosed" x:Name="PluginWindow" Height="316" Width="540" NonActiveBorderBrush="#FF427FED" OverlayBrush="#FF427FED" MinWidth="540" MinHeight="316" MaxHeight="316" MaxWidth="540" UseLayoutRounding="True" BorderBrush="#FF427FED" ResizeMode="CanMinimize" Title="Gyűjtemény exportálás" HorizontalAlignment="Center" VerticalAlignment="Center">
     <controls:MetroWindow.Resources>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -218,8 +218,8 @@
             </Setter>
         </Style>
     </controls:MetroWindow.Resources>
-    <ScrollViewer Margin="0, 0, 2, 0" VerticalScrollBarVisibility="Auto">
-        <StackPanel Height="283" Width="530" VerticalAlignment="Center" HorizontalAlignment="Center">
+    <ScrollViewer Margin="0, 0, 2, 0" VerticalScrollBarVisibility="Auto" Width="532" HorizontalAlignment="Center" Height="285">
+        <StackPanel Height="284" VerticalAlignment="Center" HorizontalAlignment="Center" Width="532">
             <StackPanel.BindingGroup>
                 <BindingGroup/>
             </StackPanel.BindingGroup>
@@ -231,10 +231,10 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="export_bt" Click="export_click" Margin="0,0,122,-113" Content="Exportálás&#xA;CSV fájlba" Foreground="White" FontFamily="Times New Roman" FontSize="23" BorderBrush="#CC0E4262" Cursor="Hand" Height="114" IsTabStop="False" VerticalAlignment="Center" AutomationProperties.IsOffscreenBehavior="FromClip">
+                <Button x:Name="export_bt" Click="export_click" Margin="0,90,0,-154" Content="Exportálás CSV fájlba" Foreground="White" FontFamily="Times New Roman" FontSize="18" Cursor="Hand" Height="35" IsTabStop="False" VerticalAlignment="Center" AutomationProperties.IsOffscreenBehavior="FromClip" HorizontalAlignment="Center" Grid.ColumnSpan="2" Panel.ZIndex="1" Width="175">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">
-                            <Setter Property="Background" Value="#CC427FED"/>
+                            <Setter Property="Background" Value="#FF427FED"/>
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type Button}">
@@ -253,13 +253,13 @@
                     </Button.Style>
                 </Button>
             </Grid>
-            <ListBox Height="115" VerticalAlignment="Center" Background="#CCFFFFFF" Margin="177,0,8,0">
+            <ListBox Height="100" VerticalAlignment="Center" Background="#CCFFFFFF" Margin="0" HorizontalAlignment="Center" Width="345">
                 <ListBoxItem Content="1. Indítsd el a Hearthstone-t!" Background="{x:Null}" Focusable="False" IsTabStop="False" TextOptions.TextHintingMode="Fixed" AutomationProperties.IsOffscreenBehavior="Default" ScrollViewer.VerticalScrollBarVisibility="Disabled" Style="{DynamicResource ListBoxItemStyle2}"/>
                 <ListBoxItem Content="2. Kattints az &quot;Exportálás CSV fájlba&quot; gombra!&#xA;Az asztalon létrejön a gyujtemeny.csv fájl." Selected="ListBoxItem_Selected" Background="{x:Null}" IsTabStop="False" Focusable="False" Style="{DynamicResource ListBoxItemStyle1}"/>
                 <ListBoxItem Content="3. A Hearthstone Hungary-n menj be a profil gyűjteményedbe!" Background="{x:Null}" Focusable="False" IsTabStop="False" Style="{DynamicResource ListBoxItemStyle3}"/>
                 <ListBoxItem Content="4. Töltsd fel a gyujtemeny.csv fájlt a Hearthstone Hungary-re!" Background="{x:Null}" IsTabStop="False" Focusable="False" Style="{DynamicResource ListBoxItemStyle4}"/>
             </ListBox>
-            <Image HorizontalAlignment="Left" Height="156" Margin="50,0" Source="HSHU-logo.png" IsEnabled="False" VerticalAlignment="Center" UseLayoutRounding="True" />
+            <Image HorizontalAlignment="Center" Height="130" Margin="50,37,50,0" Source="HSHU-logo.png" IsEnabled="False" UseLayoutRounding="True" />
         </StackPanel>
     </ScrollViewer>
 </controls:MetroWindow>

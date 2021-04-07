@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -56,8 +56,9 @@ namespace exportalas
             var status = Status.GetStatus().MirrorStatus;
             if (status == HearthMirror.Enums.MirrorStatus.Ok)
             {
-                var goldenCollection = Reflection.GetCollection().Where(x => x.Premium);
-                var commonCollection = Reflection.GetCollection().Where(x => !x.Premium);
+                var premiumCollection = Reflection.GetCollection().Where(x => x.PremiumType == 2);
+                var goldenCollection = Reflection.GetCollection().Where(x => x.PremiumType == 1);
+                var commonCollection = Reflection.GetCollection().Where(x => x.PremiumType == 0);
 
                 string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "gyujtemeny.csv");
 
@@ -81,8 +82,10 @@ namespace exportalas
                             commonCollection.Where(x => x.Id.Equals(dbCard.Key)).Select(x => x.Count).FirstOrDefault();
                         var amountGolden =
                             goldenCollection.Where(x => x.Id.Equals(dbCard.Key)).Select(x => x.Count).FirstOrDefault();
+                        var amountPremium =
+                            premiumCollection.Where(x => x.Id.Equals(dbCard.Key)).Select(x => x.Count).FirstOrDefault();
                         csv.WriteField(amountNormal);
-                        csv.WriteField(amountGolden);
+                        csv.WriteField(amountGolden + amountPremium);
 
                         csv.NextRecord();
                     }

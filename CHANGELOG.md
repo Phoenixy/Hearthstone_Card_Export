@@ -1,3 +1,8 @@
+v1.2.1 - 2023/08/05
+ - CPU setting has been reverted to "Any platform" instead of preferring x86 CPU systems.
+ - Updated Microsoft.Bcl.AsyncInterfaces to 7.0.0 (from 5.0.0)!
+ - Added Signature card support!
+
 v1.2.0 - 2021/04/07
  - Updated HearthMirror.dll to work with the latest Deck Tracker changes (1.14.4 from April 3)!
  - Updated code to work with the new Deck Tracker changes!

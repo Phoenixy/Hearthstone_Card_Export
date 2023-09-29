@@ -1,5 +1,9 @@
+v1.2.2 - 2023/09/29
+ - Reflection.GetCollection() has been changed to Reflection.Client.GetCollection(), so it works with the latest Deck Tracker versions (v1.22 and newer).
+ - HearthMirror.dll and HearthDb.dll updated to latest versions.
+ - Newtonsoft.Json, System.Memory, System.Runtime.CompilerServices.Unsafe and System.Reflection.DispatchProxy updated to latest stable versions.
+
 v1.2.1 - 2023/08/05
- - CPU setting has been reverted to "Any platform" instead of preferring x86 CPU systems.
  - Updated Microsoft.Bcl.AsyncInterfaces to 7.0.0 (from 5.0.0)!
  - Added Signature card support!
 

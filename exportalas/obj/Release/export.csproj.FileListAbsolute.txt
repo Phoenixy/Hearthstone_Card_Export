@@ -1,26 +1,53 @@
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\export.csprojAssemblyReference.cache
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\Controls\HSCollection.baml
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\Controls\PluginMenuItem.g.cs
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\MainWindow.g.cs
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas_MarkupCompile.cache
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas_MarkupCompile.lref
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\exportalas.dll.config
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\exportalas.dll
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\exportalas.pdb
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ControlzEx.dll
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\CsvHelper.dll
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\MahApps.Metro.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthDb.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthMirror.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthstoneDeckTracker.exe
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Threading.Tasks.Extensions.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HSReplay.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\LiveCharts.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\LiveCharts.Wpf.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthWatcher.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HtmlAgilityPack.dll
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Newtonsoft.Json.dll
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.ValueTuple.dll
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Windows.Interactivity.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Squirrel.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\NuGet.Squirrel.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\BobsBuddy.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\SharpRaven.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\De.TorstenMandelkow.MetroChart.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\WPFLocalizeExtension.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Splat.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\SharpCompress.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\DeltaCompressionDotNet.MsDelta.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Mono.Cecil.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\XAMLMarkupExtensions.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\DeltaCompressionDotNet.dll
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ControlzEx.pdb
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\CsvHelper.xml
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthDb.pdb
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthMirror.pdb
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\MahApps.Metro.pdb
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\MahApps.Metro.xml
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Newtonsoft.Json.xml
-D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.ValueTuple.xml
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthstoneDeckTracker.pdb
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthstoneDeckTracker.exe.config
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Threading.Tasks.Extensions.xml
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthWatcher.pdb
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\de-DE\HearthstoneDeckTracker.resources.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\fr-FR\HearthstoneDeckTracker.resources.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ja-JP\HearthstoneDeckTracker.resources.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ko-KR\HearthstoneDeckTracker.resources.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\pl-PL\HearthstoneDeckTracker.resources.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\pt-BR\HearthstoneDeckTracker.resources.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\pt-PT\HearthstoneDeckTracker.resources.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ru-RU\HearthstoneDeckTracker.resources.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\uk-UA\HearthstoneDeckTracker.resources.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\zh-CN\HearthstoneDeckTracker.resources.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\zh-TW\HearthstoneDeckTracker.resources.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\Controls\HSCollection.baml
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\Controls\PluginMenuItem.g.cs
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\MainWindow.g.cs
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas_MarkupCompile.cache
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas_MarkupCompile.lref
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\Controls\PluginMenuItem.baml
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\MainWindow.baml
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas.g.resources
@@ -29,3 +56,169 @@ D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exp
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\export.csproj.CopyComplete
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas.dll
 D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas.pdb
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\CsvHelper.xml
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Xaml.Behaviors.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ControlzEx.xml
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Xaml.Behaviors.pdb
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Xaml.Behaviors.xml
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Bcl.AsyncInterfaces.xml
+D:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\export.csprojAssemblyReference.cache
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\export.csprojAssemblyReference.cache
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\Controls\HSCollection.baml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\Controls\PluginMenuItem.g.cs
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\MainWindow.g.cs
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas_MarkupCompile.cache
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas_MarkupCompile.lref
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\exportalas.dll.config
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\exportalas.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\exportalas.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ControlzEx.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\CsvHelper.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Bcl.HashCode.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Xaml.Behaviors.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Buffers.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Memory.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Numerics.Vectors.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Threading.Tasks.Extensions.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HSReplay.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\LiveCharts.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\LiveCharts.Wpf.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthWatcher.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HtmlAgilityPack.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Newtonsoft.Json.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Squirrel.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\NuGet.Squirrel.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\BobsBuddy.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\SharpRaven.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\De.TorstenMandelkow.MetroChart.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\WPFLocalizeExtension.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Splat.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\SharpCompress.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\DeltaCompressionDotNet.MsDelta.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Mono.Cecil.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\XAMLMarkupExtensions.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\DeltaCompressionDotNet.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ControlzEx.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ControlzEx.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\CsvHelper.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthstoneDeckTracker.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthstoneDeckTracker.exe.config
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Bcl.AsyncInterfaces.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Bcl.HashCode.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Xaml.Behaviors.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Microsoft.Xaml.Behaviors.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Buffers.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Memory.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Numerics.Vectors.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Threading.Tasks.Extensions.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthWatcher.pdb
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\de-DE\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\fr-FR\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ja-JP\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ko-KR\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\pl-PL\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\pt-BR\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\pt-PT\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\ru-RU\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\uk-UA\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\zh-CN\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\zh-TW\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\Controls\PluginMenuItem.baml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\MainWindow.baml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas.g.resources
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\exportalas.Properties.Resources.resources
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\export.csproj.GenerateResource.cache
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\export.csproj.CoreCompileInputs.cache
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\obj\Release\export.csproj.CopyComplete
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthDb.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\HearthMirror.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Text.Encodings.Web.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Text.Json.dll
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Text.Encodings.Web.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\System.Text.Json.xml
+S:\FÁJLOK\HSHU C# Project\Hearthstone-Collection-Tracker-master2\exportalas\exportalas\bin\Release\Newtonsoft.Json.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\exportalas.dll.config
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\exportalas.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\exportalas.pdb
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\ControlzEx.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\CsvHelper.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Microsoft.Bcl.HashCode.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Microsoft.Xaml.Behaviors.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Newtonsoft.Json.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Buffers.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Memory.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Numerics.Vectors.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Text.Encodings.Web.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Text.Json.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Threading.Tasks.Extensions.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\HSReplay.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\LiveCharts.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\LiveCharts.Wpf.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\HearthWatcher.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\HtmlAgilityPack.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Squirrel.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\NuGet.Squirrel.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\BobsBuddy.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\SharpRaven.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\De.TorstenMandelkow.MetroChart.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\WPFLocalizeExtension.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Splat.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\SharpCompress.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\DeltaCompressionDotNet.MsDelta.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Mono.Cecil.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\XAMLMarkupExtensions.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\DeltaCompressionDotNet.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\ControlzEx.pdb
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\ControlzEx.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\CsvHelper.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\HearthstoneDeckTracker.pdb
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\HearthstoneDeckTracker.exe.config
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Microsoft.Bcl.AsyncInterfaces.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Microsoft.Bcl.HashCode.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Microsoft.Xaml.Behaviors.pdb
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Microsoft.Xaml.Behaviors.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\Newtonsoft.Json.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Buffers.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Memory.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Numerics.Vectors.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Text.Encodings.Web.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Text.Json.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Threading.Tasks.Extensions.xml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\HearthWatcher.pdb
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\de-DE\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\fr-FR\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\ja-JP\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\ko-KR\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\pl-PL\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\pt-BR\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\pt-PT\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\ru-RU\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\uk-UA\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\zh-CN\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\zh-TW\HearthstoneDeckTracker.resources.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\export.csproj.AssemblyReference.cache
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\Controls\HSCollection.baml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\Controls\PluginMenuItem.g.cs
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\MainWindow.g.cs
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\exportalas_MarkupCompile.cache
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\exportalas_MarkupCompile.lref
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\Controls\PluginMenuItem.baml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\MainWindow.baml
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\exportalas.g.resources
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\exportalas.Properties.Resources.resources
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\export.csproj.GenerateResource.cache
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\export.csproj.CoreCompileInputs.cache
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\exportalas.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\exportalas.pdb
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\obj\Release\export.csproj.CopyComplete
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\System.Reflection.DispatchProxy.dll
+S:\FÁJLOK\HSHU C# Project\exportalas C#\exportalas\exportalas\bin\Release\untapped-scry-dotnet.dll

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -6,10 +6,6 @@ using HearthMirror;
 using CsvHelper;
 using System.Text;
 using System.Globalization;
-using System.Runtime;
-using System.Collections.Generic;
-using System.Text.Json;
-using Newtonsoft.Json;
 
 namespace exportalas
 {
@@ -56,13 +52,14 @@ namespace exportalas
 
         private void export_click(object sender, RoutedEventArgs e)
         {
+            //Reflection.Client. p = new Reflection();
             var status = Status.GetStatus().MirrorStatus;
             if (status == HearthMirror.Enums.MirrorStatus.Ok)
             {
-                var signatureCollection = Reflection.GetCollection().Where(x => x.PremiumType == 3);
-                var premiumCollection = Reflection.GetCollection().Where(x => x.PremiumType == 2);
-                var goldenCollection = Reflection.GetCollection().Where(x => x.PremiumType == 1);
-                var commonCollection = Reflection.GetCollection().Where(x => x.PremiumType == 0);
+                var signatureCollection = Reflection.Client.GetCollection().Where(x => x.PremiumType == 3);
+                var premiumCollection = Reflection.Client.GetCollection().Where(x => x.PremiumType == 2);
+                var goldenCollection = Reflection.Client.GetCollection().Where(x => x.PremiumType == 1);
+                var commonCollection = Reflection.Client.GetCollection().Where(x => x.PremiumType == 0);
 
                 //create CSV file
                 string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "gyujtemeny.csv");

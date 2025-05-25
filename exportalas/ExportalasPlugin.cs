@@ -31,7 +31,8 @@ namespace exportalas
 
         public void OnUpdate()
         {
-            //CheckForUpdates();
+            // TODO: Implement update checks or remove this method if not needed.
+            // CheckForUpdates();
         }
 
         public string Name => "Gyűjtemény exportálás";
@@ -80,6 +81,7 @@ namespace exportalas
 
         public void OnButtonPress()
         {
+            // TODO: Implement button press functionality or remove this method if not needed.
         }
 
         public MenuItem MenuItem => MainMenuItem;
@@ -88,6 +90,13 @@ namespace exportalas
 
         public static PluginSettings Settings { get; set; }
 
-        public string ButtonText => throw new NotImplementedException();
+        public string ButtonText
+        {
+            get
+            {
+                // TODO: Implement actual button text retrieval or remove if this property is unused.
+                throw new NotImplementedException("ButtonText property is not yet implemented.");
+            }
+        }
     }
 }

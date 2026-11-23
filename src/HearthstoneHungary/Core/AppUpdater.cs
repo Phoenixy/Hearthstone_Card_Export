@@ -74,7 +74,7 @@ namespace HearthstoneHungary.Core
 
                 if (release == null || release.Version <= App.Version)
                 {
-                    SetState(UpdateState.UpToDate, $"A plugin naprakész (v{App.Version}).");
+                    SetState(UpdateState.UpToDate, $"Az alkalmazás naprakész (v{App.Version}).");
                     return;
                 }
 
@@ -139,7 +139,7 @@ namespace HearthstoneHungary.Core
             }
         }
 
-        /// <summary>"v2.0.1" → 2.0.1 (mindig 3 tagú, hogy összevethető legyen a plugin verziójával).</summary>
+        /// <summary>"v2.0.1" → 2.0.1 (mindig 3 tagú, hogy összevethető legyen az alkalmazás verziójával).</summary>
         internal static Version ParseVersion(string tag)
         {
             if (string.IsNullOrWhiteSpace(tag))

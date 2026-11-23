@@ -1,76 +1,66 @@
-# Hearthstone Hungary – gyűjtemény plugin
+# Hearthstone Hungary
 
-Hearthstone Deck Tracker (HDT) plugin, ami feltölti a Hearthstone gyűjteményedet a
-[Hearthstone Hungary](https://hearthstonehungary.hu) profilodba, vagy CSV fájlba exportálja.
+Windows alkalmazás, ami a Hearthstone mellett fut, és feltölti a gyűjteményedet a
+[Hearthstone Hungary](https://hearthstonehungary.hu) profilodba.
 
-*Hearthstone Deck Tracker plugin that uploads your Hearthstone collection to your
-hearthstonehungary.hu profile (or exports it to CSV). Primarily for Hungarian players.*
+*Windows app that runs next to Hearthstone and uploads your collection to your
+hearthstonehungary.hu profile. Primarily for Hungarian players.*
+
+> A korábbi Hearthstone Deck Tracker plugin megszűnt: a Deck Tracker 2026. november 30-tól nem tölt be pluginokat.
+> Az alkalmazáshoz nem kell a Deck Tracker.
 
 ## Telepítés
 
-1. Telepítsd a [Hearthstone Deck Trackert](https://hsreplay.net/downloads/).
-2. Töltsd le a plugint: **[exportalas.zip](https://github.com/Phoenixy/Hearthstone_Card_Export/releases/latest/download/exportalas.zip)**
-3. HDT: *Options → Tracker → Plugins*, és húzd rá a zip fájlt (vagy csomagold ki a `%AppData%\HearthstoneDeckTracker\Plugins\exportalas` mappába).
-4. Kapcsold be a „Gyűjtemény exportálás” plugint.
-
-Ezt csak egyszer kell megcsinálni: a 2.0.0-s verziótól a plugin magától frissül.
-Ha a régi (1.x) verzió fent van, előtte töröld a `Plugins\exportalas` mappát.
+1. Töltsd le: **[HearthstoneHungary.zip](https://github.com/Phoenixy/Hearthstone_Card_Export/releases/latest/download/HearthstoneHungary.zip)**
+2. Csomagold ki egy saját mappába, például `%LocalAppData%\HearthstoneHungary` (ne a *Program Files* alá, mert oda nem tud frissülni).
+3. Indítsd el a `HearthstoneHungary.exe`-t.
+   Az első indításkor a Windows figyelmeztethet („A Windows megvédte a számítógépet”), mert a program nincs digitálisan aláírva:
+   *További információ → Futtatás mindenképp*.
 
 ## Használat
 
-A HDT *Plugins* menüjében nyisd meg a „Gyűjtemény exportálás” ablakot.
+1. A Hearthstone Hungary profilodban, a **Gyűjtemény** fülön hozz létre egy tokent (vagy: [hearthstonehungary.hu/app](https://hearthstonehungary.hu/app)).
+2. Másold be az alkalmazásba, és kattints az „Összekapcsolás” gombra.
+3. Kész. Amíg fut a Hearthstone, az alkalmazás 2 percenként kiolvassa a gyűjteményt, és ha változott
+   (csomagbontás, craftolás, új lapok), feltölti. A „Feltöltés most” gombbal kézzel is feltöltheted.
 
-**Automatikus feltöltés (ajánlott)**
-
-1. A Hearthstone Hungary profilodban hozz létre egy plugin tokent.
-2. Másold be a pluginba, és kattints az „Összekapcsolás” gombra.
-3. Kész. Ha változik a gyűjteményed (csomagbontás, craftolás, új lapok), a plugin magától feltölti.
-   A „Feltöltés most” gombbal bármikor kézzel is feltöltheted.
-
-A token titkosítva, csak a te Windows felhasználódnak olvashatóan van elmentve. A profilodban bármikor visszavonhatod.
-
-**Exportálás CSV fájlba**
-
-Ha nem szeretnéd összekapcsolni a profilodat: indítsd el a Hearthstone-t, kattints az
-„Exportálás CSV fájlba” gombra, és a kapott fájlt töltsd fel a Hearthstone Hungary-n a profilod gyűjtemény oldalán.
+Az ablak bezárásakor a program a tálcán fut tovább; kilépni a tálcaikon menüjéből lehet. Alapból a Windows-szal együtt indul
+(a tálcára), ez kikapcsolható. A token titkosítva, csak a te Windows felhasználódnak olvashatóan van elmentve,
+a profilodban bármikor visszavonhatod. Beállítások és napló: `%AppData%\HearthstoneHungary`.
 
 ## Automatikus frissítés
 
-A plugin 6 óránként megnézi, van-e új kiadás ebben a repóban (GitHub Releases). Ha van, letölti,
-ellenőrzi (ez a plugin-e, jó-e a verziószám, betölthető-e a 64 bites HDT-ben), és a helyére teszi.
-A HDT következő indításakor már az új verzió fut. Kikapcsolható a plugin ablakában.
+Az alkalmazás 6 óránként megnézi, van-e új kiadás ebben a repóban (GitHub Releases). Ha van, letölti, ellenőrzi
+(ez az alkalmazás-e, jó-e a verziószám, fut-e 64 biten), és kicseréli a fájlokat. A régieket `.old` végűre nevezi át,
+mert a futó programot nem lehet felülírni. Az új verzió az újraindítás után fut: ha épp nem fut a Hearthstone és az ablak
+nincs nyitva, magától újraindul. Kikapcsolható az ablakban.
 
 ---
 
 ## Fejlesztés
 
-Kell hozzá: Visual Studio 2022 (.NET asztali fejlesztés) vagy a .NET SDK, és egy telepített HDT.
+Felépítés:
+- `src/HearthstoneHungary`: az alkalmazás (WPF, .NET Framework 4.8, AnyCPU).
+- `external/unityspy`: a Hearthstone memóriaolvasó forrása (Firestone, MIT), változtatás nélkül. Lásd [external/unityspy/SOURCE.md](external/unityspy/SOURCE.md).
+- `src/UnitySpy`, `src/UnitySpy.HearthstoneLib`: a memóriaolvasó projektfájljai.
+- [docs/API.md](docs/API.md): a hearthstonehungary.hu API leírása.
 
-1. A HDT DLL-jeit másold a `lib\` mappába (ez nincs a repóban):
-   ```
-   powershell -ExecutionPolicy Bypass -File tools\copy-hdt-libs.ps1
-   ```
-2. Nyisd meg az `exportalas.sln`-t, vagy parancssorból: `dotnet build exportalas\export.csproj`
-3. Kipróbáláshoz: `dotnet build exportalas\export.csproj -p:DeployToHdt=true` a HDT plugin mappájába másolja a DLL-t
-   (utána indítsd újra a HDT-t).
+Fordítás: a GitHub Actions minden pull requestnél lefordítja, a kész `HearthstoneHungary.zip` a futás oldalán,
+az *Artifacts* résznél letölthető. Helyben (Windows, .NET SDK vagy Visual Studio 2022):
+
+    dotnet build src\HearthstoneHungary\HearthstoneHungary.csproj
 
 Fontos:
-- A plugin **AnyCPU**-ra fordul. A HDT 1.53.0 óta 64 bites, egy x86-os DLL be sem töltődik.
-- A gyűjteményt a HDT `CollectionHelpers` osztályán keresztül olvassuk, nem közvetlenül a HearthMirrorral,
-  így a Hearthstone változásait a HDT fejlesztői követik le.
-- A HSHU címek az `exportalas/Internal/HshuConfig.cs`-ben vannak. A szerver oldali API leírása: [docs/API.md](docs/API.md).
+- **AnyCPU, Prefer32Bit nélkül.** A Hearthstone 64 bites, a memóriáját csak 64 bites folyamat tudja olvasni.
+- Ha egy Hearthstone frissítés után nem olvasható a gyűjtemény, előbb a memóriaolvasót kell frissíteni:
+  `powershell -ExecutionPolicy Bypass -File tools\update-unityspy.ps1` (a Firestone általában napokon belül javítja).
+- A HSHU címek a `src/HearthstoneHungary/Core/HshuConfig.cs`-ben vannak.
 
 ## Új verzió kiadása
 
-1. Írd át a verziót az `exportalas/Properties/AssemblyInfo.cs`-ben (pl. `2.0.1.0`), és írd be a `CHANGELOG.md`-be.
-2. Commit + push.
-3. Futtasd: `powershell -ExecutionPolicy Bypass -File tools\release.ps1`
+1. Emeld a verziót a `src/HearthstoneHungary/Properties/AssemblyInfo.cs`-ben (pl. `3.0.1.0`).
+2. Írj egy `v3.0.1 - ...` bejegyzést a `CHANGELOG.md` elejére.
+3. Commit + push a master ágra (vagy pull request, majd merge).
 
-   Ez Release módban fordít, elkészíti a `dist\exportalas.zip`-et, és létrehozza a GitHub Release-t
-   (`v2.0.1` tag, a csatolt zippel, a CHANGELOG bejegyzéssel). Ehhez kell a [GitHub CLI](https://cli.github.com/) (`gh auth login`).
-
-   Kézzel is mehet: `dotnet build exportalas\export.csproj -c Release`, majd a GitHubon *Releases → Draft a new release*,
-   tag: `v2.0.1`, és csatold a `dist\exportalas.zip`-et.
-
-A tagnek egyeznie kell az AssemblyInfo verziójával, és a zipben `exportalas.dll`-nek kell lennie,
-különben a felhasználóknál az automatikus frissítés elutasítja.
+A GitHub Actions lefordítja, és létrehozza a `v3.0.1` Release-t a `HearthstoneHungary.zip`-pel és a CHANGELOG bejegyzéssel.
+A felhasználóknál az alkalmazás 6 órán belül letölti.

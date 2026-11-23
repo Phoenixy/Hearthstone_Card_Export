@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Hearthstone Hungary alkalmazás (Windows). A Hearthstone mellett fut a tálcán, kiolvassa a gyűjteményt,
+    és feltölti a hearthstonehungary.hu profilba.
+
+    Fordítás: dotnet build src\HearthstoneHungary\HearthstoneHungary.csproj -c Release
+    Release módban a dist\HearthstoneHungary.zip is elkészül (ezt csatolja a GitHub Actions a Release-hez).
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>HearthstoneHungary</AssemblyName>
+    <RootNamespace>HearthstoneHungary</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <!-- A Hearthstone 64 bites: csak 64 bites folyamat tudja olvasni a memóriáját, ezért nem kérünk 32 bitet. -->
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <ApplicationIcon>Resources\hshu-icon.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Security" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UnitySpy.HearthstoneLib\UnitySpy.HearthstoneLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\hshu-icon.ico" />
+    <Resource Include="Resources\bg-bright.png" />
+    <Resource Include="Resources\HSHU-logo.png" />
+    <None Include="..\..\THIRD-PARTY-NOTICES.txt" Link="THIRD-PARTY-NOTICES.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- Kiadáskor a dist\HearthstoneHungary.zip készül el: a program és a futáshoz kellő DLL-ek. -->
+  <Target Name="PackAppZip" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <PropertyGroup>
+      <AppZipStaging>$(MSBuildThisFileDirectory)obj\zip\</AppZipStaging>
+      <AppDistDir>$(MSBuildThisFileDirectory)..\..\dist\</AppDistDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <AppZipFiles Include="$(OutDir)*.exe;$(OutDir)*.exe.config;$(OutDir)*.dll;$(OutDir)THIRD-PARTY-NOTICES.txt" />
+    </ItemGroup>
+    <RemoveDir Directories="$(AppZipStaging)" />
+    <Copy SourceFiles="@(AppZipFiles)" DestinationFolder="$(AppZipStaging)" />
+    <MakeDir Directories="$(AppDistDir)" />
+    <ZipDirectory SourceDirectory="$(AppZipStaging)" DestinationFile="$(AppDistDir)HearthstoneHungary.zip" Overwrite="true" />
+    <Message Importance="high" Text="Alkalmazás csomag: $(AppDistDir)HearthstoneHungary.zip" />
+  </Target>
+
+</Project>

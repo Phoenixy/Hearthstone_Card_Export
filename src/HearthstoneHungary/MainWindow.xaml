@@ -1,0 +1,169 @@
+﻿<Window x:Class="HearthstoneHungary.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Hearthstone Hungary"
+        Icon="Resources/hshu-icon.ico"
+        Width="520"
+        SizeToContent="Height"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        UseLayoutRounding="True"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="HshuBlue" Color="#FF427FED"/>
+        <SolidColorBrush x:Key="HshuBlueDark" Color="#FF0E4262"/>
+        <SolidColorBrush x:Key="HshuText" Color="#FF1F2328"/>
+        <SolidColorBrush x:Key="HshuMuted" Color="#FF57606A"/>
+        <SolidColorBrush x:Key="HshuGreen" Color="#FF137333"/>
+        <SolidColorBrush x:Key="HshuOrange" Color="#FFB06000"/>
+
+        <Style x:Key="HshuButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{StaticResource HshuBlue}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource HshuBlueDark}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButton" TargetType="{x:Type Button}" BasedOn="{StaticResource HshuButton}">
+            <Setter Property="Background" Value="#FF6B7280"/>
+        </Style>
+
+        <Style x:Key="Card" TargetType="{x:Type Border}">
+            <Setter Property="Background" Value="#EBFFFFFF"/>
+            <Setter Property="BorderBrush" Value="#40427FED"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="14,12"/>
+            <Setter Property="Margin" Value="16,0,16,12"/>
+        </Style>
+
+        <Style x:Key="CardTitle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource HshuText}"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+        </Style>
+
+        <Style x:Key="BodyText" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{StaticResource HshuText}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style x:Key="MutedText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BodyText}">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{StaticResource HshuMuted}"/>
+        </Style>
+
+        <Style TargetType="{x:Type CheckBox}">
+            <Setter Property="Foreground" Value="{StaticResource HshuText}"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="Resources/bg-bright.png" Stretch="UniformToFill"/>
+        </Grid.Background>
+
+        <StackPanel Margin="0,12,0,4">
+            <Image Source="Resources/HSHU-logo.png" Height="90" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+
+            <!-- A Hearthstone állapota -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse x:Name="GameDot" Width="10" Height="10" Margin="0,0,8,0" VerticalAlignment="Center" Fill="{StaticResource HshuMuted}"/>
+                    <TextBlock x:Name="GameStatusText" Style="{StaticResource BodyText}" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Automatikus feltöltés -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource CardTitle}" Text="Gyűjtemény feltöltése a HSHU profilodba"/>
+                    <TextBlock x:Name="LinkStatusText" Style="{StaticResource BodyText}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+
+                    <StackPanel x:Name="TokenPanel">
+                        <TextBlock Style="{StaticResource MutedText}" Margin="0,0,0,6">
+                            <Run Text="Hozz létre egy tokent a Hearthstone Hungary profilodban (Gyűjtemény fül), és másold be ide."/>
+                            <Hyperlink Click="TokenHelp_Click" Foreground="{StaticResource HshuBlue}">Token létrehozása</Hyperlink>
+                        </TextBlock>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <PasswordBox x:Name="TokenBox" Grid.Column="0" Margin="0,0,8,0" Padding="4,0" VerticalContentAlignment="Center"
+                                         ToolTip="Token beillesztése" KeyDown="TokenBox_KeyDown"/>
+                            <Button x:Name="SaveTokenButton" Grid.Column="1" Style="{StaticResource HshuButton}"
+                                    Content="Összekapcsolás" Click="SaveToken_Click"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <Button x:Name="UploadNowButton" Style="{StaticResource HshuButton}" Content="Feltöltés most" Click="UploadNow_Click"/>
+                        <Button x:Name="UnlinkButton" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Content="Leválasztás" Click="Unlink_Click"/>
+                    </StackPanel>
+
+                    <TextBlock x:Name="UploadStatusText" Style="{StaticResource MutedText}" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Beállítások -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource CardTitle}" Text="Beállítások"/>
+                    <CheckBox x:Name="AutoUploadCheck" Content="Automatikus feltöltés, ha változik a gyűjteményem"
+                              Checked="AutoUploadCheck_Changed" Unchecked="AutoUploadCheck_Changed"/>
+                    <CheckBox x:Name="StartWithWindowsCheck" Margin="0,6,0,0" Content="Indítás a Windows-szal (a tálcán)"
+                              Checked="StartWithWindowsCheck_Changed" Unchecked="StartWithWindowsCheck_Changed"/>
+                    <CheckBox x:Name="AutoUpdateCheck" Margin="0,6,0,0" Content="Automatikus frissítés (ajánlott)"
+                              Checked="AutoUpdateCheck_Changed" Unchecked="AutoUpdateCheck_Changed"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Verzió és frissítés -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="VersionText" Grid.Column="0" Style="{StaticResource BodyText}" VerticalAlignment="Center"/>
+                        <Button x:Name="RestartButton" Grid.Column="1" Style="{StaticResource HshuButton}" Margin="0,0,8,0"
+                                FontSize="12" Padding="10,4" Content="Újraindítás" Click="Restart_Click" Visibility="Collapsed"/>
+                        <Button x:Name="CheckUpdateButton" Grid.Column="2" Style="{StaticResource SecondaryButton}"
+                                FontSize="12" Padding="10,4" Content="Frissítés keresése" Click="CheckUpdate_Click"/>
+                    </Grid>
+                    <TextBlock x:Name="UpdateStatusText" Style="{StaticResource MutedText}" Margin="0,6,0,0"/>
+                    <TextBlock Style="{StaticResource MutedText}" Margin="0,6,0,0">
+                        <Hyperlink Click="OpenLog_Click" Foreground="{StaticResource HshuBlue}">Napló megnyitása</Hyperlink>
+                        <Run Text=" · "/>
+                        <Hyperlink Click="Exit_Click" Foreground="{StaticResource HshuBlue}">Kilépés a programból</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Window>

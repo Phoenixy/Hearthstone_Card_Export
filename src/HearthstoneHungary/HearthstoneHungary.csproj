@@ -40,7 +40,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\hshu-icon.ico" />
-    <Resource Include="Resources\bg-bright.png" />
+    <Resource Include="Resources\bg-bright-padded.png" />
     <Resource Include="Resources\HSHU-logo.png" />
     <None Include="..\..\THIRD-PARTY-NOTICES.txt" Link="THIRD-PARTY-NOTICES.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

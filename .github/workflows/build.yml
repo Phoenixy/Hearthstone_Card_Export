@@ -1,0 +1,97 @@
+# A plugin fordítása és kiadása a GitHubon.
+#
+# - Minden pushnál és pull requestnél lefordítja a plugint. A kész exportalas.zip a futás oldalán,
+#   az "Artifacts" résznél letölthető (teszteléshez, Visual Studio nélkül).
+# - Ha a master ágra olyan verzió kerül (exportalas/Properties/AssemblyInfo.cs), amihez még nincs
+#   Release, akkor létrehozza a v<verzió> Release-t a CHANGELOG.md bejegyzésével és az exportalas.zip-pel.
+#   Ezt tölti le a felhasználók pluginja az automatikus frissítéskor.
+
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verzió és CHANGELOG bejegyzés
+        id: version
+        run: |
+          $assemblyInfo = Get-Content "exportalas\Properties\AssemblyInfo.cs" -Raw -Encoding UTF8
+          if ($assemblyInfo -notmatch 'AssemblyVersion\("(\d+)\.(\d+)\.(\d+)') {
+              throw "Nem találom az AssemblyVersion-t az AssemblyInfo.cs-ben."
+          }
+          $version = "$($Matches[1]).$($Matches[2]).$($Matches[3])"
+          $tag = "v$version"
+          Write-Host "Verzió: $tag"
+
+          $changelog = Get-Content "CHANGELOG.md" -Encoding UTF8
+          $start = ($changelog | Select-String -Pattern "^v$([regex]::Escape($version))\b" | Select-Object -First 1).LineNumber
+          if (-not $start) {
+              throw "A CHANGELOG.md-ben nincs '$tag' kezdetű bejegyzés."
+          }
+          $notes = @()
+          for ($i = $start; $i -lt $changelog.Count; $i++) {
+              if ($changelog[$i] -match '^v\d+\.\d+') { break }
+              $notes += $changelog[$i]
+          }
+          ($notes -join "`n").Trim() | Set-Content "release-notes.md" -Encoding UTF8
+
+          gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
+          $exists = ($LASTEXITCODE -eq 0)
+          $global:LASTEXITCODE = 0
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "exists=$($exists.ToString().ToLower())" >> $env:GITHUB_OUTPUT
+          if ($exists) { Write-Host "A $tag Release már létezik, csak fordítás lesz." }
+
+      - name: HDT könyvtárak letöltése (legújabb Deck Tracker)
+        run: |
+          New-Item -ItemType Directory -Force -Path hdt, lib | Out-Null
+          gh release download --repo HearthSim/HDT-Releases --pattern "*-full.nupkg" --dir hdt
+          if ($LASTEXITCODE -ne 0) { throw "Nem sikerült letölteni a HDT csomagot." }
+          $pkg = Get-ChildItem hdt -Filter "*-full.nupkg" | Select-Object -First 1
+          Write-Host "HDT csomag: $($pkg.Name)"
+          Expand-Archive $pkg.FullName -DestinationPath hdt\pkg
+          foreach ($f in "HearthstoneDeckTracker.exe", "HearthDb.dll", "HearthMirror.dll", "MahApps.Metro.dll", "Newtonsoft.Json.dll") {
+              $src = Join-Path "hdt\pkg\lib\app" $f
+              if (-not (Test-Path $src)) { throw "Hiányzik a HDT csomagból: $f" }
+              Copy-Item $src lib
+          }
+
+      - name: Fordítás
+        run: |
+          dotnet build "exportalas\export.csproj" -c Release
+          if ($LASTEXITCODE -ne 0) { throw "A fordítás nem sikerült." }
+          if (-not (Test-Path "dist\exportalas.zip")) { throw "Nem készült el a dist\exportalas.zip." }
+
+      - name: Plugin csomag feltöltése (Artifacts)
+        uses: actions/upload-artifact@v4
+        with:
+          name: exportalas-${{ steps.version.outputs.tag }}
+          path: dist/exportalas.zip
+
+      - name: GitHub Release létrehozása
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && steps.version.outputs.exists == 'false'
+        run: |
+          $tag = "${{ steps.version.outputs.tag }}"
+          gh release create $tag "dist\exportalas.zip" --repo $env:GITHUB_REPOSITORY --title $tag --notes-file release-notes.md --target $env:GITHUB_SHA
+          if ($LASTEXITCODE -ne 0) { throw "A GitHub Release létrehozása nem sikerült." }
+          Write-Host "Kész: $tag kiadva. A felhasználók pluginja 6 órán belül letölti."

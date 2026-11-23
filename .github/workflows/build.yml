@@ -30,7 +30,7 @@ jobs:
       run:
         shell: pwsh
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Verzió és CHANGELOG bejegyzés
         id: version
@@ -83,7 +83,7 @@ jobs:
           if (-not (Test-Path "dist\exportalas.zip")) { throw "Nem készült el a dist\exportalas.zip." }
 
       - name: Plugin csomag feltöltése (Artifacts)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: exportalas-${{ steps.version.outputs.tag }}
           path: dist/exportalas.zip

@@ -9,6 +9,8 @@ using Hearthstone_Deck_Tracker.API;
 using Hearthstone_Deck_Tracker.Hearthstone;
 using Hearthstone_Deck_Tracker.Plugins;
 using Hearthstone_Deck_Tracker.Utility.Logging;
+// A HDT 1.60-ban is van PluginSettings osztály, ezért kell a pontos hivatkozás.
+using PluginSettings = exportalas.Internal.PluginSettings;
 
 namespace exportalas
 {

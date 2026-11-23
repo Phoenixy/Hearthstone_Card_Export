@@ -21,11 +21,12 @@ namespace HearthstoneHungary.Core
 
     internal sealed class ApiResult
     {
-        public ApiResult(ApiStatus status, string userName, string message)
+        public ApiResult(ApiStatus status, string userName, string message, int? cards = null)
         {
             Status = status;
             UserName = userName;
             Message = message;
+            Cards = cards;
         }
 
         public ApiStatus Status { get; }
@@ -35,6 +36,9 @@ namespace HearthstoneHungary.Core
 
         /// <summary>A szerver üzenete (magyarul), vagy a hálózati hiba leírása.</summary>
         public string Message { get; }
+
+        /// <summary>Feltöltésnél: hány lapot mentett a szerver (csak az oldalon megjelenő lapok).</summary>
+        public int? Cards { get; }
     }
 
     /// <summary>A hearthstonehungary.hu alkalmazás API hívásai. A formátum leírása: docs/API.md</summary>
@@ -104,7 +108,7 @@ namespace HearthstoneHungary.Core
                 var ok = json?.Value<bool?>("ok") == true;
 
                 if (response.IsSuccessStatusCode && ok)
-                    return new ApiResult(ApiStatus.Ok, userName, message);
+                    return new ApiResult(ApiStatus.Ok, userName, message, json?.Value<int?>("cards"));
 
                 switch ((int)response.StatusCode)
                 {

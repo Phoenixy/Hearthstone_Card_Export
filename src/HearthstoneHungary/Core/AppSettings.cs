@@ -96,7 +96,7 @@ namespace HearthstoneHungary.Core
         [XmlIgnore]
         public UploadRecord LastUpload => Uploads.OrderByDescending(u => u.UploadedAtUtc).FirstOrDefault();
 
-        public void RememberUpload(string battleTag, string hash, int totalCards)
+        public void RememberUpload(string battleTag, string hash, int totalCards, int shownCards)
         {
             var record = FindUpload(battleTag);
             if (record == null)
@@ -106,6 +106,7 @@ namespace HearthstoneHungary.Core
             }
             record.Hash = hash;
             record.TotalCards = totalCards;
+            record.ShownCards = shownCards;
             record.UploadedAtUtc = DateTime.UtcNow;
         }
     }
@@ -115,7 +116,12 @@ namespace HearthstoneHungary.Core
     {
         public string BattleTag { get; set; }
         public string Hash { get; set; }
+        /// <summary>A játékból kiolvasott darabszám (ebből vesszük észre a gyanúsan hiányos kiolvasást).</summary>
         public int TotalCards { get; set; }
+
+        /// <summary>Amennyit a szerver elmentett: csak az oldalon megjelenő lapok (Classic formátum, hősök stb. nélkül).</summary>
+        public int ShownCards { get; set; }
+
         public DateTime UploadedAtUtc { get; set; }
     }
 }

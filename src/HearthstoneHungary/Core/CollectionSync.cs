@@ -38,7 +38,7 @@ namespace HearthstoneHungary.Core
             _reader = reader;
             var last = settings.LastUpload;
             if (last != null)
-                StatusText = DescribeUpload(last.UploadedAtUtc, last.TotalCards, last.BattleTag);
+                StatusText = DescribeUpload(last.UploadedAtUtc, last.ShownCards > 0 ? last.ShownCards : last.TotalCards, last.BattleTag);
         }
 
         /// <summary>Akkor hívódik, ha változott a státusz szöveg vagy az összekapcsolás. Bármelyik szálról jöhet.</summary>
@@ -172,12 +172,13 @@ namespace HearthstoneHungary.Core
             {
                 case ApiStatus.Ok:
                     var changed = previous == null || previous.Hash != snapshot.Hash;
-                    _settings.RememberUpload(snapshot.BattleTag, snapshot.Hash, snapshot.TotalCards);
+                    var shown = result.Cards ?? snapshot.TotalCards;
+                    _settings.RememberUpload(snapshot.BattleTag, snapshot.Hash, snapshot.TotalCards, shown);
                     if (!string.IsNullOrEmpty(result.UserName))
                         _settings.LinkedUserName = result.UserName;
                     _settings.Save();
-                    Log.Info($"Gyűjtemény feltöltve: {snapshot.BattleTag}, {snapshot.TotalCards} lap. {result.Message}");
-                    SetStatus(DescribeUpload(DateTime.UtcNow, snapshot.TotalCards, snapshot.BattleTag));
+                    Log.Info($"Gyűjtemény feltöltve: {snapshot.BattleTag}, {snapshot.TotalCards} kiolvasott, {shown} mentett lap. {result.Message}");
+                    SetStatus(DescribeUpload(DateTime.UtcNow, shown, snapshot.BattleTag));
                     if (changed)
                         Uploaded?.Invoke(result.Message);
                     break;

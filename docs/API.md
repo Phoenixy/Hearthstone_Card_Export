@@ -66,10 +66,14 @@ User-Agent: HearthstoneHungary/3.0.0
 
 - **A `cards` a teljes gyűjtemény**, a próba (trial) lapok nélkül. Ami nincs a listában, abból 0 van,
   tehát a mentés a régi gyűjtemény **lecserélése**, nem hozzáadás.
-- `card_id`: a játék kártyaazonosítója. Az oldal a `jsweb_cards.image` oszlop alapján keresi meg a lap dbfId-ját;
-  ha egy azonosító többször szerepel, a gyűjthető sor nyer. Az oldalon még nem ismert lapok (új kiegészítő a kártya import előtt)
-  kimaradnak; a válasz `unknown` mezője ezek számát adja. Az alkalmazás változatlan gyűjteményt is feltölt naponta egyszer,
-  így ezek a kártya import utáni napon felkerülnek.
+- `card_id`: a játék kártyaazonosítója. Az oldal a `jsweb_cards.image` oszlop alapján keresi meg a lap dbfId-ját.
+  Csak az oldalon megjelenő lapok (`collectible_constructed = 1`, mint a gyűjtemény oldalon) mentődnek; ha egy azonosító
+  többször szerepel, ez a sor nyer.
+  - A játék a gyűjteményben a Classic formátum (`VAN_`) lapjait, a hősöket és a régi Core-változatokat is felsorolja:
+    ezek kimaradnak, a darabszámuk a válasz `skipped` mezőjében van.
+  - Az oldalon még nem ismert lapok (új kiegészítő a kártya import előtt) is kimaradnak, a számuk az `unknown` mezőben van.
+    Az alkalmazás változatlan gyűjteményt is feltölt naponta egyszer, így ezek a kártya import utáni napon felkerülnek.
+  - A `cards` mező a ténylegesen mentett darabszám; az alkalmazás ezt írja ki.
 - A „gold” oszlopba az arany + gyémánt + aláírt lapok összege kerül (ahogy a CSV importnál is).
 - `battletag`: több Battle.net fióknál az utolsó feltöltés nyer (felhasználónként egy gyűjtemény van).
 - `hash`: a tartalom SHA-256 lenyomata (az alkalmazás ebből látja, hogy változott-e; az oldal csak eltárolja).
@@ -78,7 +82,7 @@ User-Agent: HearthstoneHungary/3.0.0
 Sikeres válasz:
 
 ```json
-{ "ok": true, "user": "PHOENIX", "message": "Gyűjtemény frissítve (4012 lap).", "cards": 4012, "unknown": 0 }
+{ "ok": true, "user": "PHOENIX", "message": "Gyűjtemény frissítve (2560 lap).", "cards": 2560, "unknown": 0, "skipped": 629 }
 ```
 
 ### Hibakódok

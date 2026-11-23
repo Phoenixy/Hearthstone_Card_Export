@@ -12,7 +12,7 @@ namespace exportalas.Internal
         public const string ApiUrl = SiteUrl + "/api/plugin/collection.php";
 
         /// <summary>Itt hoz létre (és von vissza) tokent a felhasználó.</summary>
-        public const string TokenPageUrl = SiteUrl + "/profile/plugin";
+        public const string TokenPageUrl = SiteUrl + "/plugin";
 
         /// <summary>A token ebben a HTTP fejlécben megy. (Az Authorization fejlécet az Apache + proxy_fcgi alapból eldobja.)</summary>
         public const string TokenHeader = "X-HSHU-Token";

@@ -1,37 +1,21 @@
 # HSHU plugin API (szerver oldal)
 
-Ez a leírás a hearthstonehungary.hu oldalra kerülő PHP részhez készült. A plugin 2.0.0-s verziója
-ezt az API-t hívja. A címek a `exportalas/Internal/HshuConfig.cs` fájlban vannak; ha máshova teszed
-a végpontot vagy a token oldalt, ott írd át, és adj ki új plugin verziót.
+A plugin 2.0.0-s verziója ezt az API-t hívja. A címek a `exportalas/Internal/HshuConfig.cs` fájlban
+vannak; ha valamelyik megváltozik, ott írd át, és adj ki új plugin verziót.
 
-| Mi | Alapértelmezett cím |
+| Mi | Cím |
 |---|---|
 | API végpont | `https://hearthstonehungary.hu/api/plugin/collection.php` |
-| Token létrehozása / visszavonása (profil oldal) | `https://hearthstonehungary.hu/profile/plugin` |
+| Token létrehozása / visszavonása | `https://hearthstonehungary.hu/plugin` (belépve a profil Gyűjtemény fülére visz: `/profile/<név>/collection#plugin`) |
 
 ## Token
 
-- A felhasználó a profiljában hoz létre tokent, és bemásolja a pluginba. Jelszó soha nem kerül a pluginba.
+- A felhasználó a profilja Gyűjtemény fülén hoz létre tokent, és bemásolja a pluginba. Jelszó soha nem kerül a pluginba.
 - Generálás: `bin2hex(random_bytes(32))` (64 karakter). A plugin csak `A-Z a-z 0-9 _ - .` karaktereket és 20–200 hosszt fogad el.
-- Az adatbázisba csak a hash kerüljön: `hash('sha256', $token)`. A tokent egyszer mutasd meg a létrehozás után.
-- Legyen visszavonható (a profil oldalon), és látszódjon, mikor volt utoljára használva.
-- A token létrehozó/visszavonó űrlapra kell CSRF védelem, mint a többi profil űrlapra.
-
-Javasolt tábla:
-
-```sql
-CREATE TABLE hs_plugin_tokens (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  user_id INT UNSIGNED NOT NULL,
-  token_hash CHAR(64) NOT NULL,
-  created_at DATETIME NOT NULL,
-  last_used_at DATETIME NULL,
-  last_upload_at DATETIME NULL,
-  revoked_at DATETIME NULL,
-  UNIQUE KEY token_hash (token_hash),
-  KEY user_id (user_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
-```
+- Az adatbázisba csak a hash kerül (`hash('sha256', $token)`), a token csak a létrehozás után egyszer látszik.
+- Felhasználónként egy aktív token van: új token kérésekor a régi azonnal érvényét veszti. A „Leválasztás” gomb visszavonja.
+- A Gyűjtemény fülön látszik az utolsó feltöltés ideje, a lapok száma, a BattleTag és a plugin verziója.
+- Tábla: `jsweb_plugin_tokens` (a fő adatbázisban, a gyűjtemény mellett).
 
 ### Miért nem `Authorization` fejléc?
 
@@ -90,8 +74,7 @@ User-Agent: HSHU-Gyujtemeny-Plugin/2.0.0
 - A CSV-ben eddig a „Golden lapok” oszlop az arany + gyémánt + aláírt (signature) lapok összege volt.
   Ha a mostani tábla is így tárolja, mentsd a `golden + diamond + signature` összeget.
 - A próba (trial) lapok nincsenek benne.
-- `battletag`: ha valaki több Battle.net fiókkal játszik, mindegyik fiók külön feltöltést küld.
-  Döntsd el, hogy ilyenkor az utolsó feltöltés nyer (legegyszerűbb), vagy fiókonként tárolod.
+- `battletag`: több Battle.net fióknál az utolsó feltöltés nyer (felhasználónként egy gyűjtemény van).
 - `hash`: a tartalom SHA-256 lenyomata. Ha megegyezik az előzővel, a mentés kihagyható.
 - `format`: ha később változik a formátum, ez nő. Ismeretlen formátumra válaszolj 426-tal.
 
@@ -117,154 +100,20 @@ A plugin magától csak akkor tölt fel, ha változott a gyűjtemény, ezért no
 óránként legfeljebb néhány kérés jön felhasználónként. Egy „percenként 1 feltöltés tokenenként”
 korlát bőven elég.
 
-## PHP váz
+## Szerver oldal
 
-Procedurális mysqli, prepared statementekkel. A `// TODO` részeket igazítsd a meglévő táblákhoz
-(felhasználók, kártyák, gyűjtemény); a gyűjtemény mentését a mostani CSV-importáló kódból érdemes átvenni.
+A hearthstonehungary.hu kódjában:
 
-```php
-<?php
-// /api/plugin/collection.php – HDT gyűjtemény plugin API (format 1). Leírás: docs/API.md a plugin repóban.
-declare(strict_types=1);
+- `api/plugin/collection.php`: a végpont.
+- `function/plugin_function.php`: tokenek (létrehozás, visszavonás, ellenőrzés) és a gyűjtemény mentése.
+- `modules/plugin_box.php`: a token kezelése a profil Gyűjtemény fülén. `modules/plugin.php`: a `/plugin` oldal vendégeknek.
 
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: no-store');
+A mentés ugyanúgy működik, mint a CSV import: a `jsweb_register_collection` sorában a `normal` / `gold`
+a lap maximumáig (Legendary 1, más 2) tárolja a darabszámot, az `all_normal` / `all_gold` pedig azokat a lapokat,
+amikből ennél több van. A „gold” az arany + gyémánt + aláírt lapok összege. Az oldalon még nem ismert lapok
+(új kiegészítő a kártya import előtt) is elmentődnek, így a következő kártya import után magától megjelennek.
 
-require __DIR__ . '/../../sql.php'; // TODO: a saját útvonalad ($conn, $conn_user)
-
-const MIN_PLUGIN_VERSION = '2.0.0';
-const MAX_BODY_BYTES = 1048576; // 1 MB, egy teljes gyűjtemény kb. 250 KB
-const UPLOAD_INTERVAL_SEC = 60;
-
-function api_out(int $status, array $data): never
-{
-    http_response_code($status);
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
-function api_error(int $status, string $error, string $message): never
-{
-    api_out($status, ['ok' => false, 'error' => $error, 'message' => $message]);
-}
-
-// --- 1. Token ---------------------------------------------------------------
-$token = $_SERVER['HTTP_X_HSHU_TOKEN'] ?? '';
-if (!preg_match('/^[A-Za-z0-9_.-]{20,200}$/', $token)) {
-    api_error(401, 'invalid_token', 'Hiányzó vagy hibás token.');
-}
-$token_hash = hash('sha256', $token);
-
-// TODO: users tábla és oszlopnevek
-$stmt = mysqli_prepare($conn_user,
-    'SELECT t.id, t.user_id, t.last_upload_at, u.username
-       FROM hs_plugin_tokens t
-       JOIN users u ON u.id = t.user_id
-      WHERE t.token_hash = ? AND t.revoked_at IS NULL');
-mysqli_stmt_bind_param($stmt, 's', $token_hash);
-mysqli_stmt_execute($stmt);
-$row = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
-mysqli_stmt_close($stmt);
-if (!$row) {
-    api_error(401, 'invalid_token', 'A token érvénytelen vagy vissza lett vonva.');
-}
-$token_id = (int)$row['id'];
-$user_id = (int)$row['user_id'];
-
-$stmt = mysqli_prepare($conn_user, 'UPDATE hs_plugin_tokens SET last_used_at = NOW() WHERE id = ?');
-mysqli_stmt_bind_param($stmt, 'i', $token_id);
-mysqli_stmt_execute($stmt);
-mysqli_stmt_close($stmt);
-
-// --- 2. GET: token ellenőrzés -------------------------------------------------
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    api_out(200, ['ok' => true, 'user' => $row['username']]);
-}
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    api_error(405, 'method_not_allowed', 'Csak GET és POST kérés engedélyezett.');
-}
-
-// --- 3. POST: korlát, beolvasás, ellenőrzés ----------------------------------
-if ($row['last_upload_at'] !== null && time() - strtotime($row['last_upload_at']) < UPLOAD_INTERVAL_SEC) {
-    api_error(429, 'rate_limited', 'Túl sűrű feltöltés, próbáld újra egy perc múlva.');
-}
-
-$raw = file_get_contents('php://input', false, null, 0, MAX_BODY_BYTES + 1);
-if ($raw === false || strlen($raw) > MAX_BODY_BYTES) {
-    api_error(413, 'too_large', 'Túl nagy kérés.');
-}
-try {
-    $body = json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
-} catch (JsonException $e) {
-    api_error(400, 'bad_json', 'Hibás JSON.');
-}
-
-if (($body['format'] ?? null) !== 1
-    || version_compare((string)($body['plugin_version'] ?? '0'), MIN_PLUGIN_VERSION, '<')) {
-    api_error(426, 'plugin_outdated', 'A plugin túl régi. Frissítsd a legújabb verzióra!');
-}
-if (!isset($body['cards']) || !is_array($body['cards']) || count($body['cards']) > 20000) {
-    api_error(400, 'bad_cards', 'Hibás kártyalista.');
-}
-
-$cards = []; // dbf_id => [normal, golden_osszes]
-foreach ($body['cards'] as $c) {
-    $dbf = $c['dbf_id'] ?? null;
-    $counts = [$c['normal'] ?? 0, $c['golden'] ?? 0, $c['diamond'] ?? 0, $c['signature'] ?? 0];
-    if (!is_int($dbf) || $dbf <= 0) {
-        api_error(400, 'bad_cards', 'Hibás kártya azonosító.');
-    }
-    foreach ($counts as $n) {
-        if (!is_int($n) || $n < 0 || $n > 99) {
-            api_error(400, 'bad_cards', 'Hibás darabszám.');
-        }
-    }
-    $cards[$dbf] = [$counts[0], $counts[1] + $counts[2] + $counts[3]];
-}
-
-// Csak az oldalon ismert lapokat mentjük (az új kiegészítő lapjai a kártya import után jelennek meg).
-// TODO: jsweb_cards oszlopnév a dbfId-hoz
-$known = [];
-$res = mysqli_query($conn, 'SELECT dbf_id FROM jsweb_cards');
-while ($r = mysqli_fetch_row($res)) {
-    $known[(int)$r[0]] = true;
-}
-$cards = array_intersect_key($cards, $known);
-
-// --- 4. Mentés: a régi gyűjtemény lecserélése --------------------------------
-// TODO: a gyűjtemény tábla neve/oszlopai (ugyanaz, amibe a CSV import ír)
-mysqli_begin_transaction($conn_user);
-try {
-    $stmt = mysqli_prepare($conn_user, 'DELETE FROM user_collection WHERE user_id = ?');
-    mysqli_stmt_bind_param($stmt, 'i', $user_id);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_close($stmt);
-
-    $stmt = mysqli_prepare($conn_user, 'INSERT INTO user_collection (user_id, dbf_id, normal, golden) VALUES (?, ?, ?, ?)');
-    foreach ($cards as $dbf => [$normal, $golden]) {
-        mysqli_stmt_bind_param($stmt, 'iiii', $user_id, $dbf, $normal, $golden);
-        mysqli_stmt_execute($stmt);
-    }
-    mysqli_stmt_close($stmt);
-
-    $stmt = mysqli_prepare($conn_user, 'UPDATE hs_plugin_tokens SET last_upload_at = NOW() WHERE id = ?');
-    mysqli_stmt_bind_param($stmt, 'i', $token_id);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_close($stmt);
-
-    mysqli_commit($conn_user);
-} catch (mysqli_sql_exception $e) {
-    mysqli_rollback($conn_user);
-    error_log('[plugin collection] ' . $e->getMessage());
-    api_error(500, 'server_error', 'Nem sikerült menteni a gyűjteményt, próbáld később.');
-}
-
-$total = 0;
-foreach ($cards as [$normal, $golden]) {
-    $total += $normal + $golden;
-}
-api_out(200, ['ok' => true, 'user' => $row['username'], 'message' => "Gyűjtemény frissítve ($total lap)."]);
-```
+Korlátok: a kérés legfeljebb 2 MB és 20 000 lap lehet, a darabszám 0–999, tokenenként percenként 1 feltöltés.
 
 ## Kipróbálás curl-lel
 

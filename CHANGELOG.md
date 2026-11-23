@@ -1,9 +1,9 @@
 v3.0.0 - 2026/11/23
- - NEW: Hearthstone Hungary is now a standalone Windows app instead of a Hearthstone Deck Tracker plugin. Deck Tracker stops loading plugins on November 30th, 2026; the app does not need Deck Tracker at all.
- - The app runs in the system tray next to Hearthstone, reads your collection directly from the game (using Firestone's open source UnitySpy library) and uploads it to your Hearthstone Hungary profile whenever it changes.
- - Link it once with a token from your profile (Collection tab, or hearthstonehungary.hu/app). The token is stored encrypted for your Windows user only.
- - Starts with Windows (optional), updates itself from GitHub Releases, keeps a log in %AppData%\HearthstoneHungary.
- - CSV export has been removed: the app uploads directly. The CSV upload on the website still accepts files exported earlier.
+- ÚJDONSÁG: A Hearthstone Hungary mostantól önálló Windows-alkalmazásként működik, nem pedig a Hearthstone Deck Tracker bővítményeként. Mivel a Deck Tracker 2026. november 30-án megszünteti a bővítmények támogatását, az új alkalmazás már egyáltalán nem igényli a Deck Tracker használatát.
+- Az alkalmazás a rendszertálcán fut a Hearthstone mellett, közvetlenül a játékból olvassa ki a gyűjteményedet (a Firestone nyílt forráskódú UnitySpy könyvtárát használva), és minden változás esetén feltölti azt a Hearthstone Hungary profilodba.
+- A fiókodat egyszer kell összekapcsolnod a profilodban (a „Gyűjtemény” fülön vagy a hearthstonehungary.hu/app oldalon) található token segítségével. A token titkosítva tárolódik, és kizárólag a te Windows-felhasználói fiókod számára érhető el.
+- Az alkalmazás (opcionálisan) a Windows-szal együtt indul, automatikusan frissül a GitHub Releases felületéről, és naplófájlokat vezet a `%AppData%\HearthstoneHungary` mappában.
+- A CSV-exportálás lehetősége megszűnt, mivel az alkalmazás közvetlenül végzi a feltöltést. A weboldalon található CSV-feltöltő funkció továbbra is elfogadja a korábban exportált fájlokat.
 
 v2.0.0 - never released (Hearthstone Deck Tracker dropped plugin support)
  - NEW: Automatic upload of your collection to your Hearthstone Hungary profile. Link the plugin once with a token from your HSHU profile; after that it uploads by itself whenever your collection changes (packs, crafting, new cards). There is also an "Upload now" button.

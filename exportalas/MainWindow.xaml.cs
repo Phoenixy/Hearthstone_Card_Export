@@ -1,189 +1,218 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
-using HearthMirror;
-using CsvHelper;
-using System.Text;
-using System.Globalization;
-using Microsoft.Win32; // Added for SaveFileDialog
-using System.Threading.Tasks; // Added for Task.Run
-using System.Collections.Generic; // Added for Dictionary
+using exportalas.Internal;
+using Hearthstone_Deck_Tracker;
+using Hearthstone_Deck_Tracker.Utility.Logging;
+using Microsoft.Win32;
 
 namespace exportalas
 {
-    // Helper class to store aggregated card counts
-    public class CardCountsForExport
-    {
-        public int Normal { get; set; }
-        public int Golden { get; set; }
-        public int Premium { get; set; } // For cards like Diamond (PremiumType 2)
-        public int Signature { get; set; } // PremiumType 3
-    }
-
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow
     {
+        private readonly PluginSettings _settings;
+        private readonly CollectionSync _sync;
+        private readonly PluginUpdater _updater;
+        private bool _initializing = true;
 
-        public Thickness TitleBarMargin
+        internal MainWindow(PluginSettings settings, CollectionSync sync, PluginUpdater updater)
         {
-            get { return new Thickness(0, TitlebarHeight, 0, 0); }
-        }
+            _settings = settings;
+            _sync = sync;
+            _updater = updater;
 
-        public static void Refresh()
-        {
-            if (Application.Current.Windows.OfType<MainWindow>().Any())
+            InitializeComponent();
+
+            AutoUploadCheck.IsChecked = _settings.AutoUpload;
+            AutoUpdateCheck.IsChecked = _settings.AutoUpdate;
+            VersionText.Text = $"Verzió: v{ExportalasPlugin.PluginVersion}";
+
+            _sync.StatusChanged += OnSyncStatusChanged;
+            _updater.StatusChanged += OnUpdaterStatusChanged;
+            Closed += (sender, args) =>
             {
-                _ = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
-            }
+                _sync.StatusChanged -= OnSyncStatusChanged;
+                _updater.StatusChanged -= OnUpdaterStatusChanged;
+            };
+
+            RefreshSyncUi();
+            RefreshUpdateUi();
+            _initializing = false;
         }
 
-        public MainWindow()
+        // A státusz események háttérszálról is jöhetnek, ezért a UI szálra tesszük át őket.
+        private void OnSyncStatusChanged() => Dispatcher.BeginInvoke(new Action(RefreshSyncUi));
+
+        private void OnUpdaterStatusChanged() => Dispatcher.BeginInvoke(new Action(RefreshUpdateUi));
+
+        private void RefreshSyncUi()
         {
+            var linked = _sync.IsLinked;
+            var busy = _sync.IsBusy;
+            LinkStatusText.Text = linked
+                ? "Összekapcsolva" + (string.IsNullOrEmpty(_sync.LinkedUserName) ? "" : ": " + _sync.LinkedUserName)
+                : "Nincs összekapcsolva";
+            TokenPanel.Visibility = linked ? Visibility.Collapsed : Visibility.Visible;
+            UnlinkButton.Visibility = linked ? Visibility.Visible : Visibility.Collapsed;
+            AutoUploadCheck.IsEnabled = linked;
+            UploadNowButton.IsEnabled = linked && !busy;
+            SaveTokenButton.IsEnabled = !busy;
+            UploadStatusText.Text = _sync.StatusText;
+        }
+
+        private void RefreshUpdateUi()
+        {
+            UpdateStatusText.Text = _updater.StatusText;
+            CheckUpdateButton.IsEnabled = _updater.State != UpdateState.Checking && _updater.State != UpdateState.Installed;
+        }
+
+        private void AutoUploadCheck_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_initializing)
+                return;
+            _settings.AutoUpload = AutoUploadCheck.IsChecked == true;
+            _settings.Save();
+        }
+
+        private void AutoUpdateCheck_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_initializing)
+                return;
+            _settings.AutoUpdate = AutoUpdateCheck.IsChecked == true;
+            _settings.Save();
+        }
+
+        private void TokenHelp_Click(object sender, RoutedEventArgs e) => OpenUrl(HshuConfig.TokenPageUrl);
+
+        private async void SaveToken_Click(object sender, RoutedEventArgs e)
+        {
+            SaveTokenButton.IsEnabled = false;
             try
             {
-                InitializeComponent();
-                Title = "Gyűjtemény exportálás";
-            }
-            catch (Exception e)
-            {
-                _ = MessageBox.Show(e.Message, "Gyűjtemény exportálás", MessageBoxButton.OK);
-            }
-        }
-
-        private void MainWindow_OnContentRendered(object sender, EventArgs e)
-        {
-            this.SizeToContent = SizeToContent.Manual;
-        }
-
-        private void MainWindow_OnClosed(object sender, EventArgs e)
-        {
-        }
-
-        private async void export_click(object sender, RoutedEventArgs e)
-        {
-            export_bt.IsEnabled = false;
-            try
-            {
-                await Task.Run(() =>
+                if (await _sync.LinkAsync(TokenBox.Password))
                 {
-                    try // General try-catch for the entire Task.Run body
-                    {
-                        var status = Status.GetStatus().MirrorStatus;
-                        if (status == HearthMirror.Enums.MirrorStatus.Ok)
-                        {
-                            var fullCollection = Reflection.Client.GetCollection();
-                            var aggregatedCardCounts = new Dictionary<string, CardCountsForExport>();
-
-                            if (fullCollection != null)
-                            {
-                                foreach (var cardInCollection in fullCollection)
-                                {
-                                    if (!aggregatedCardCounts.TryGetValue(cardInCollection.Id, out var counts))
-                                    {
-                                        counts = new CardCountsForExport();
-                                        aggregatedCardCounts[cardInCollection.Id] = counts;
-                                    }
-                                    switch (cardInCollection.PremiumType)
-                                    {
-                                        case 0: counts.Normal += cardInCollection.Count; break;
-                                        case 1: counts.Golden += cardInCollection.Count; break;
-                                        case 2: counts.Premium += cardInCollection.Count; break;
-                                        case 3: counts.Signature += cardInCollection.Count; break;
-                                    }
-                                }
-                            }
-
-                            SaveFileDialog saveFileDialog = new SaveFileDialog();
-                            saveFileDialog.Filter = "CSV fájl (*.csv)|*.csv";
-                            saveFileDialog.DefaultExt = ".csv";
-                            saveFileDialog.FileName = "gyujtemeny.csv";
-                            saveFileDialog.Title = "Gyűjtemény exportálása";
-
-                            bool? dialogResult = null;
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                dialogResult = saveFileDialog.ShowDialog();
-                            });
-
-                            if (dialogResult == true)
-                            {
-                                string filePath = saveFileDialog.FileName;
-                                try // Try-catch for file I/O
-                                {
-                                    using (var textWriter = new StreamWriter(filePath, false, Encoding.UTF8))
-                                    {
-                                        var csv = new CsvWriter(textWriter, CultureInfo.InvariantCulture);
-                                        csv.WriteField("Id");
-                                        csv.WriteField("Név");
-                                        csv.WriteField("Normal lapok");
-                                        csv.WriteField("Golden lapok");
-                                        csv.NextRecord();
-
-                                        foreach (var dbCard in HearthDb.Cards.Collectible)
-                                        {
-                                            csv.WriteField(dbCard.Value.DbfId);
-                                            csv.WriteField(dbCard.Value.Name);
-                                            if (aggregatedCardCounts.TryGetValue(dbCard.Key, out var counts))
-                                            {
-                                                csv.WriteField(counts.Normal);
-                                                // "Golden lapok" column includes Golden, Diamond (PremiumType 2), and Signature (PremiumType 3) cards.
-                                                csv.WriteField(counts.Golden + counts.Premium + counts.Signature);
-                                            }
-                                            else
-                                            {
-                                                csv.WriteField(0);
-                                                csv.WriteField(0);
-                                            }
-                                            csv.NextRecord();
-                                        }
-                                    }
-                                    Application.Current.Dispatcher.Invoke(() =>
-                                    {
-                                        MessageBox.Show($"Sikeres exportálás! A {Path.GetFileName(filePath)} fájl létrejött!", "Sikeres");
-                                    });
-                                }
-                                catch (IOException ioEx)
-                                {
-                                    Application.Current.Dispatcher.Invoke(() =>
-                                    {
-                                        MessageBox.Show($"Hiba történt a fájl írása közben: {ioEx.Message}", "Fájl írási hiba", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    });
-                                }
-                            }
-                        }
-                        else if (status == HearthMirror.Enums.MirrorStatus.ProcNotFound)
-                        {
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                MessageBox.Show("Nem fut a Hearthstone!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Error);
-                            });
-                        }
-                        else if (status == HearthMirror.Enums.MirrorStatus.Error)
-                        {
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                MessageBox.Show("Hiba történt a Hearthstone adatok lekérése közben.", "Hiba", MessageBoxButton.OK, MessageBoxImage.Error);
-                            });
-                        }
-                    }
-                    catch (Exception ex) // General catch for unexpected errors within Task.Run
-                    {
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            MessageBox.Show($"Ismeretlen hiba történt az exportálás során: {ex.Message}", "Exportálási hiba", MessageBoxButton.OK, MessageBoxImage.Error);
-                        });
-                    }
-                });
+                    TokenBox.Clear();
+                    if (Core.Game.IsRunning)
+                        await _sync.SyncAsync(SyncTrigger.Manual);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("[HSHU] " + ex);
+                ShowError("Hiba az összekapcsolás közben: " + ex.Message);
             }
             finally
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                RefreshSyncUi();
+            }
+        }
+
+        private void Unlink_Click(object sender, RoutedEventArgs e)
+        {
+            var answer = MessageBox.Show(this,
+                "Biztosan leválasztod a plugint a Hearthstone Hungary profilodról?\n\nA gyűjteményed nem frissül tovább magától. A tokent a profilodban is érdemes visszavonni.",
+                "Leválasztás", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (answer != MessageBoxResult.Yes)
+                return;
+            _sync.Unlink();
+            RefreshSyncUi();
+        }
+
+        private async void UploadNow_Click(object sender, RoutedEventArgs e)
+        {
+            UploadNowButton.IsEnabled = false;
+            try
+            {
+                await _sync.SyncAsync(SyncTrigger.Manual);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("[HSHU] " + ex);
+                ShowError("Hiba a feltöltés közben: " + ex.Message);
+            }
+            finally
+            {
+                RefreshSyncUi();
+            }
+        }
+
+        private async void Export_Click(object sender, RoutedEventArgs e)
+        {
+            ExportButton.IsEnabled = false;
+            try
+            {
+                var snapshot = await CollectionSnapshot.ReadAsync(refresh: true);
+                if (snapshot == null)
                 {
-                    export_bt.IsEnabled = true;
-                });
+                    ShowError(Core.Game.IsRunning
+                        ? "Nem sikerült kiolvasni a gyűjteményt. Várd meg, amíg betölt a főmenü, és próbáld újra."
+                        : "Nem fut a Hearthstone! Indítsd el, és várd meg a főmenüt.");
+                    return;
+                }
+
+                var dialog = new SaveFileDialog
+                {
+                    Title = "Gyűjtemény exportálása",
+                    Filter = "CSV fájl (*.csv)|*.csv",
+                    DefaultExt = ".csv",
+                    FileName = "gyujtemeny.csv",
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
+                };
+                if (dialog.ShowDialog(this) != true)
+                    return;
+
+                var path = dialog.FileName;
+                await Task.Run(() => CsvExporter.Write(path, snapshot));
+                MessageBox.Show(this, $"Sikeres exportálás! A {Path.GetFileName(path)} fájl létrejött.\n\nMost töltsd fel a Hearthstone Hungary-n a profilod gyűjtemény oldalán.",
+                    "Sikeres exportálás", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (IOException ex)
+            {
+                ShowError("Hiba történt a fájl írása közben: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("[HSHU] " + ex);
+                ShowError("Ismeretlen hiba történt az exportálás során: " + ex.Message);
+            }
+            finally
+            {
+                ExportButton.IsEnabled = true;
+            }
+        }
+
+        private async void CheckUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            CheckUpdateButton.IsEnabled = false;
+            try
+            {
+                await _updater.CheckAndInstallAsync(manual: true);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("[HSHU] " + ex);
+                ShowError("Hiba a frissítés közben: " + ex.Message);
+            }
+            finally
+            {
+                RefreshUpdateUi();
+            }
+        }
+
+        private void ShowError(string message) =>
+            MessageBox.Show(this, message, "Hiba", MessageBoxButton.OK, MessageBoxImage.Error);
+
+        private static void OpenUrl(string url)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Log.Error("[HSHU] Nem sikerült megnyitni: " + url + " – " + ex.Message);
             }
         }
     }

@@ -1,3 +1,13 @@
+v2.0.0 - 2026/11/23
+ - NEW: Automatic upload of your collection to your Hearthstone Hungary profile. Link the plugin once with a token from your HSHU profile; after that it uploads by itself whenever your collection changes (packs, crafting, new cards). There is also an "Upload now" button.
+ - NEW: The plugin updates itself from GitHub Releases. Installing v2.0.0 is the last manual reinstall.
+ - FIX: Works with the 64-bit Hearthstone Deck Tracker (v1.53.0 and newer). v1.2.2 was built for x86 only and could not be loaded there.
+ - The collection is now read through Deck Tracker's own collection helper instead of calling HearthMirror directly, so Hearthstone/HearthMirror changes are much less likely to break the plugin.
+ - CSV export still works the same way (same columns), without the CsvHelper dependency. The plugin is now a single DLL.
+ - The plugin window has been redesigned. Settings are stored in %AppData%\HearthstoneDeckTracker\HSHU_Gyujtemeny (no longer in the Collection Tracker folder).
+ - Fixed the plugin settings button in Deck Tracker (Options > Tracker > Plugins), which threw an error.
+ - Developer: SDK-style project, HDT libraries are referenced from lib\ (tools/copy-hdt-libs.ps1), release script (tools/release.ps1), build output removed from the repository.
+
 v1.2.2 - 2023/09/29
  - Reflection.GetCollection() has been changed to Reflection.Client.GetCollection(), so it works with the latest Deck Tracker versions (v1.22 and newer).
  - HearthMirror.dll and HearthDb.dll updated to latest versions.

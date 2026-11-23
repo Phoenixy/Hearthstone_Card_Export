@@ -1,3 +1,5 @@
+v3.0.0.1 - 2026/11/23
+- Háttéer csere, plugin helyett alkalmazás. 
 v3.0.0 - 2026/11/23
 - ÚJDONSÁG: A Hearthstone Hungary mostantól önálló Windows-alkalmazásként működik, nem pedig a Hearthstone Deck Tracker bővítményeként. Mivel a Deck Tracker 2026. november 30-án megszünteti a bővítmények támogatását, az új alkalmazás már egyáltalán nem igényli a Deck Tracker használatát.
 - Az alkalmazás a rendszertálcán fut a Hearthstone mellett, közvetlenül a játékból olvassa ki a gyűjteményedet (a Firestone nyílt forráskódú UnitySpy könyvtárát használva), és minden változás esetén feltölti azt a Hearthstone Hungary profilodba.

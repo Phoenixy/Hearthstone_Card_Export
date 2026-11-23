@@ -80,7 +80,7 @@ namespace HearthstoneHungary.Core
                         : " Feltöltés indul…"));
                     return true;
                 case ApiStatus.InvalidToken:
-                    SetStatus("A token érvénytelen vagy vissza lett vonva. Hozz létre újat a Hearthstone Hungary profilodban.");
+                    SetStatus(result.Message ?? "A token érvénytelen vagy vissza lett vonva. Hozz létre újat a Hearthstone Hungary profilodban.");
                     return false;
                 default:
                     SetStatus(result.Message);
@@ -188,7 +188,7 @@ namespace HearthstoneHungary.Core
                     _settings.LinkedUserName = null;
                     _settings.Save();
                     Log.Warn("A szerver elutasította a tokent, leválasztva.");
-                    SetStatus("A token érvénytelen vagy vissza lett vonva, ezért az alkalmazás leválasztódott. Hozz létre új tokent a Hearthstone Hungary profilodban.");
+                    SetStatus("Az alkalmazás leválasztódott: " + (result.Message ?? "a token érvénytelen vagy vissza lett vonva.") + " Új tokent a Hearthstone Hungary profilodban hozhatsz létre.");
                     break;
                 default:
                     if (!manual)

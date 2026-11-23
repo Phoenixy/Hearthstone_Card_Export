@@ -83,7 +83,7 @@ jobs:
           if (-not (Test-Path "dist\exportalas.zip")) { throw "Nem készült el a dist\exportalas.zip." }
 
       - name: Plugin csomag feltöltése (Artifacts)
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: exportalas-${{ steps.version.outputs.tag }}
           path: dist/exportalas.zip

@@ -82,7 +82,7 @@
 
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="Resources/bg-bright.png" Stretch="UniformToFill"/>
+            <ImageBrush ImageSource="Resources/bg-bright-padded.png" Stretch="UniformToFill"/>
         </Grid.Background>
 
         <StackPanel Margin="0,12,0,4">

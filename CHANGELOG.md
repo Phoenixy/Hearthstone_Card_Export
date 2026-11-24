@@ -1,3 +1,5 @@
+v3.3.0.0 - 2026/11/24
+- ÚJDONSÁG: Értesítés új hírekről. Ha új cikk jelenik meg a hearthstonehungary.hu-n, az alkalmazás tálcaértesítést küld, amire kattintva megnyílik a cikk. A Beállításoknál kikapcsolható.
 v3.2.1.0 - 2026/11/24
 - Ha az eszközt a weboldalon választod le, az alkalmazás ezt indításkor, az ablak megnyitásakor és óránként is ellenőrzi, és tálcaértesítéssel jelzi (eddig csak a következő feltöltéskor derült ki).
 v3.2.0.0 - 2026/11/24

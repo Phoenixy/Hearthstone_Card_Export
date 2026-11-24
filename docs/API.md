@@ -7,6 +7,7 @@ vannak; ha valamelyik megváltozik, ott írd át, és adj ki új verziót.
 |---|---|
 | Gyűjtemény (feltöltés, token ellenőrzése) | `https://hearthstonehungary.hu/api/app/collection.php` |
 | Összekötés, leválasztás | `https://hearthstonehungary.hu/api/app/link.php` |
+| Legfrissebb hírek (értesítéshez) | `https://hearthstonehungary.hu/api/app/news.php` |
 | Jóváhagyó oldal (a böngészőben) | `https://hearthstonehungary.hu/app/connect/<kód>` |
 | Leírás / összekötött eszközök | `https://hearthstonehungary.hu/app` (belépve a profil Gyűjtemény fülére visz: `/profile/<név>/collection#app`) |
 
@@ -99,6 +100,17 @@ X-HSHU-Token: 3f9a...
 ```json
 { "ok": true, "user": "PHOENIX" }
 ```
+
+### Hírek (`/api/app/news.php`)
+
+`GET`, token nélkül (nyilvános adat). A megjelenés ideje szerint a legújabb 5 cikk; a későbbi szerkesztés nem számít új hírnek.
+
+```json
+{ "ok": true, "items": [ { "id": 5599, "title": "Patch 37.0.3 hotfixek…", "url": "https://hearthstonehungary.hu/node/…", "date": "2026-11-17T22:00:00+01:00" } ] }
+```
+
+Az alkalmazás 15 percenként kérdezi le (ha az értesítés be van kapcsolva). Az első alkalommal csak megjegyzi a legújabb
+cikket, utána az annál újabbakról küld tálcaértesítést (3 napnál régebbi cikkről nem, pl. ha a gép sokáig ki volt kapcsolva).
 
 ### POST – gyűjtemény feltöltése (format 2)
 

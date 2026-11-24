@@ -37,6 +37,7 @@ namespace HearthstoneHungary
         private bool _tickRunning;
         private bool _exiting;
         private bool _updateNotified;
+        private string _balloonUrl;
         private DateTime _lastAutoSyncUtc = DateTime.MinValue;
         private GameState _lastGameState = GameState.NotRunning;
 
@@ -47,6 +48,7 @@ namespace HearthstoneHungary
         internal GameReader Reader { get; private set; }
         internal CollectionSync Sync { get; private set; }
         internal AppUpdater Updater { get; private set; }
+        internal NewsWatcher News { get; private set; }
 
         /// <summary>A Hearthstone állapota (a UI szálon frissül).</summary>
         internal GameState GameState => _lastGameState;
@@ -86,6 +88,9 @@ namespace HearthstoneHungary
             Reader = new GameReader();
             Sync = new CollectionSync(Settings, Reader);
             Updater = new AppUpdater(Settings);
+            News = new NewsWatcher(Settings);
+            News.NewsFound += (item, more) => Dispatcher.BeginInvoke(new Action(() => ShowBalloon(
+                more > 0 ? $"Új hírek a Hearthstone Hungary-n (+{more} további)" : "Új hír a Hearthstone Hungary-n", item.Title, item.Url)));
             Sync.Uploaded += message => Dispatcher.BeginInvoke(new Action(() => ShowBalloon("Gyűjtemény feltöltve", message)));
             Sync.LinkLost += message => Dispatcher.BeginInvoke(new Action(() => ShowBalloon("Leválasztva", message)));
             Updater.StatusChanged += () => Dispatcher.BeginInvoke(new Action(OnUpdaterStatusChanged));
@@ -128,6 +133,9 @@ namespace HearthstoneHungary
 
                 // Indításkor (az első körben) és óránként: nem választották-e le az eszközt a profilban.
                 await Sync.CheckLinkAsync(LinkCheckInterval);
+
+                if (Settings.NewsNotifications && News.IsCheckDue)
+                    await News.CheckAsync();
 
                 if (Settings.AutoUpdate && Updater.IsCheckDue)
                     await Updater.CheckAndInstallAsync(manual: false);
@@ -207,13 +215,22 @@ namespace HearthstoneHungary
                 if (a.Button == Forms.MouseButtons.Left)
                     ShowMainWindow();
             };
-            _trayIcon.BalloonTipClicked += (s, a) => ShowMainWindow();
+            // Az értesítésre kattintva: ha cikkhez tartozik, a cikk nyílik meg, különben az ablak.
+            _trayIcon.BalloonTipClicked += (s, a) =>
+            {
+                if (_balloonUrl != null)
+                    OpenInBrowser(_balloonUrl);
+                else
+                    ShowMainWindow();
+            };
         }
 
-        private void ShowBalloon(string title, string text)
+        /// <param name="url">Ha meg van adva, az értesítésre kattintva ez nyílik meg a böngészőben.</param>
+        private void ShowBalloon(string title, string text, string url = null)
         {
             if (_trayIcon == null || string.IsNullOrEmpty(text))
                 return;
+            _balloonUrl = url;
             _trayIcon.BalloonTipTitle = title;
             _trayIcon.BalloonTipText = text.Length > 250 ? text.Substring(0, 250) + "…" : text;
             _trayIcon.ShowBalloonTip(5000);
@@ -257,6 +274,19 @@ namespace HearthstoneHungary
             catch (Exception ex)
             {
                 Log.Error("Nem sikerült újraindítani: " + ex);
+            }
+        }
+
+        /// <summary>Weboldal (vagy fájl) megnyitása az alapértelmezett programmal.</summary>
+        internal static void OpenInBrowser(string url)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Nem sikerült megnyitni: " + url + " – " + ex.Message);
             }
         }
 

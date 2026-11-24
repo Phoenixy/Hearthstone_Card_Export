@@ -25,6 +25,12 @@ hearthstonehungary.hu profile. Primarily for Hungarian players.*
 3. Kész. Amíg fut a Hearthstone, az alkalmazás 2 percenként kiolvassa a gyűjteményt, és ha változott
    (csomagbontás, craftolás, új lapok), feltölti. A „Feltöltés most” gombbal kézzel is feltöltheted.
 
+**Pakli feltöltése:** az alkalmazás listázza a játékban használt paklijaidat (ehhez bekapcsolja a Hearthstone naplózását;
+az első alkalommal indítsd újra a játékot, és indíts el egy meccset). A „Létrehozás az oldalon” gombbal a pakli egy kattintással
+létrejön a profilodban, a „Megnyitás a pakli készítőben” gombbal előbb átnézheted és módosíthatod.
+
+**Hírek:** ha új cikk jelenik meg a Hearthstone Hungary-n, tálcaértesítést kapsz (kikapcsolható).
+
 Az ablak bezárásakor a program a tálcán fut tovább; kilépni a tálcaikon menüjéből lehet. Alapból a Windows-szal együtt indul
 (a tálcára), ez kikapcsolható. Egy profilhoz legfeljebb 5 gép köthető össze (pl. asztali gép és laptop); ezeket a profilod Gyűjtemény fülén
 látod, és bármikor leválaszthatod. Az eszköz tokenje titkosítva, csak a te Windows felhasználódnak olvashatóan van elmentve. Beállítások és napló: `%AppData%\HearthstoneHungary`.

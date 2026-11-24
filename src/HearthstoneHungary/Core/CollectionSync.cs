@@ -183,6 +183,35 @@ namespace HearthstoneHungary.Core
             }
         }
 
+        /// <summary>
+        /// Pakli küldése az oldalra: jegyet kér a szervertől, és megnyitja a böngészőben. "instant" módban a pakli azonnal
+        /// létrejön a profilban, "builder" módban a pakli készítő nyílik meg a lapokkal.
+        /// </summary>
+        /// <returns>null, ha sikerült megnyitni; különben a kiírandó hibaüzenet.</returns>
+        public async Task<string> OpenDeckOnSiteAsync(SavedDeck deck, string mode, Action<string> openUrl)
+        {
+            var token = TokenStore.Unprotect(_settings.ProtectedToken);
+            if (token == null)
+                return "Előbb kösd össze az alkalmazást a Hearthstone Hungary profiloddal.";
+            if (deck == null || string.IsNullOrEmpty(deck.Deckstring))
+                return "Nincs kiválasztott pakli.";
+
+            var result = await HshuApiClient.CreateDeckTicketAsync(token, mode, deck.Deckstring, deck.Name);
+            switch (result.Status)
+            {
+                case ApiStatus.Ok:
+                    Log.Info($"Pakli küldése az oldalra ({mode}): {deck.Name}");
+                    openUrl(result.Message);
+                    return null;
+                case ApiStatus.InvalidToken:
+                    OnTokenRejected(result.Message);
+                    return StatusText;
+                default:
+                    Log.Warn($"A pakli küldése nem sikerült ({result.Status}): {result.Message}");
+                    return result.Message ?? "A pakli küldése nem sikerült, próbáld újra később.";
+            }
+        }
+
         /// <summary>A szerver elutasította a tokent: töröljük, hogy ne próbálkozzunk vele újra és újra.</summary>
         private void OnTokenRejected(string serverMessage)
         {

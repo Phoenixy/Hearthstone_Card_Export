@@ -11,11 +11,12 @@ hearthstonehungary.hu profile. Primarily for Hungarian players.*
 
 ## Telepítés
 
-1. Töltsd le: **[HearthstoneHungary.zip](https://github.com/Phoenixy/Hearthstone_Card_Export/releases/latest/download/HearthstoneHungary.zip)**
-2. Csomagold ki egy saját mappába, például `%LocalAppData%\HearthstoneHungary` (ne a *Program Files* alá, mert oda nem tud frissülni).
-3. Indítsd el a `HearthstoneHungary.exe`-t.
+1. Töltsd le a telepítőt: **[HearthstoneHungary-Setup.exe](https://github.com/Phoenixy/Hearthstone_Card_Export/releases/latest/download/HearthstoneHungary-Setup.exe)**
+2. Futtasd a fájlt, és kövesd a telepítő lépéseit (nem kér rendszergazdai jogot, a `%LocalAppData%\HearthstoneHungary` mappába települ, és a Start menüben is megjelenik).
    Az első indításkor a Windows figyelmeztethet („A Windows megvédte a számítógépet”), mert a program nincs digitálisan aláírva:
    *További információ → Futtatás mindenképp*.
+
+*(Hordozható, telepítés nélküli változat is elérhető a Release-eknél: `HearthstoneHungary.zip`.)*
 
 ## Használat
 

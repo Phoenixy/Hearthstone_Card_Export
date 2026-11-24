@@ -20,14 +20,14 @@ hearthstonehungary.hu profile. Primarily for Hungarian players.*
 
 ## Használat
 
-1. A Hearthstone Hungary profilodban, a **Gyűjtemény** fülön hozz létre egy tokent (vagy: [hearthstonehungary.hu/app](https://hearthstonehungary.hu/app)).
-2. Másold be az alkalmazásba, és kattints az „Összekapcsolás” gombra.
+1. Az alkalmazásban kattints az **„Összekötés a HSHU profiloddal”** gombra.
+2. A böngészőben megnyíló oldalon (ha kell, jelentkezz be) ellenőrizd, hogy ugyanaz a kód látszik, mint az alkalmazásban, és kattints az **Összekötés** gombra.
 3. Kész. Amíg fut a Hearthstone, az alkalmazás 2 percenként kiolvassa a gyűjteményt, és ha változott
    (csomagbontás, craftolás, új lapok), feltölti. A „Feltöltés most” gombbal kézzel is feltöltheted.
 
 Az ablak bezárásakor a program a tálcán fut tovább; kilépni a tálcaikon menüjéből lehet. Alapból a Windows-szal együtt indul
-(a tálcára), ez kikapcsolható. A token titkosítva, csak a te Windows felhasználódnak olvashatóan van elmentve,
-a profilodban bármikor visszavonhatod. Beállítások és napló: `%AppData%\HearthstoneHungary`.
+(a tálcára), ez kikapcsolható. Egy profilhoz legfeljebb 5 gép köthető össze (pl. asztali gép és laptop); ezeket a profilod Gyűjtemény fülén
+látod, és bármikor leválaszthatod. Az eszköz tokenje titkosítva, csak a te Windows felhasználódnak olvashatóan van elmentve. Beállítások és napló: `%AppData%\HearthstoneHungary`.
 
 ## Automatikus frissítés
 

@@ -26,6 +26,12 @@ namespace HearthstoneHungary.Core
         /// <summary>Megmutattuk-e már, hogy bezáráskor a program a tálcán fut tovább.</summary>
         public bool TrayHintShown { get; set; }
 
+        /// <summary>
+        /// Az eszköz (ez a telepítés) azonosítója, az első indításkor jön létre. Az oldal eszközönként ad tokent, és
+        /// ugyanennek az eszköznek az újbóli összekötésekor a régi tokent visszavonja.
+        /// </summary>
+        public string DeviceId { get; set; }
+
         /// <summary>A HSHU token DPAPI-val titkosítva (lásd TokenStore).</summary>
         public string ProtectedToken { get; set; }
 
@@ -55,6 +61,7 @@ namespace HearthstoneHungary.Core
                             if (settings != null)
                             {
                                 settings.Uploads = settings.Uploads ?? new List<UploadRecord>();
+                                settings.EnsureDeviceId();
                                 return settings;
                             }
                         }
@@ -65,7 +72,17 @@ namespace HearthstoneHungary.Core
             {
                 Log.Error("Nem sikerült betölteni a beállításokat, alapértékekkel indulunk: " + ex);
             }
-            return new AppSettings();
+            var fresh = new AppSettings();
+            fresh.EnsureDeviceId();
+            return fresh;
+        }
+
+        private void EnsureDeviceId()
+        {
+            if (DeviceId != null && DeviceId.Length == 32)
+                return;
+            DeviceId = Guid.NewGuid().ToString("N");
+            Save();
         }
 
         public void Save()

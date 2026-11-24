@@ -55,46 +55,101 @@ namespace HearthstoneHungary.Core
 
         public string LinkedUserName => _settings.LinkedUserName;
 
-        /// <summary>Token ellenőrzése a szerveren, és mentése, ha jó.</summary>
-        /// <returns>true, ha sikerült összekapcsolni.</returns>
-        public async Task<bool> LinkAsync(string token)
+        /// <summary>Folyamatban van-e a böngészős összekötés (várjuk a jóváhagyást).</summary>
+        public bool IsLinking => _linkCts != null;
+
+        /// <summary>Összekötés közben a kód (pl. KX7P-29QD), ami a böngészőben megnyílt oldalon is látszik.</summary>
+        public string LinkCode { get; private set; }
+
+        /// <summary>Összekötés közben a jóváhagyó oldal címe (ha a böngésző nem nyílt meg magától).</summary>
+        public string LinkUrl { get; private set; }
+
+        private CancellationTokenSource _linkCts;
+
+        /// <summary>
+        /// Összekötés a HSHU profillal: kódot kér a szervertől, megnyitja a jóváhagyó oldalt a böngészőben, és
+        /// pár másodpercenként rákérdez, amíg a felhasználó jóvá nem hagyja (vagy le nem jár a kód). A UI szálról kell hívni.
+        /// </summary>
+        /// <param name="openUrl">A jóváhagyó oldal megnyitása a böngészőben.</param>
+        /// <returns>true, ha sikerült összekötni.</returns>
+        public async Task<bool> LinkViaBrowserAsync(Action<string> openUrl)
         {
-            token = token?.Trim();
-            if (!TokenStore.LooksValid(token))
+            if (_linkCts != null)
+                return false;
+            var cts = new CancellationTokenSource();
+            _linkCts = cts;
+            try
             {
-                SetStatus("Ez nem tűnik érvényes tokennek. Másold be pontosan, ahogy a Hearthstone Hungary profilodban látod.");
+                SetStatus("Összekötés indítása…");
+                var (start, error) = await HshuApiClient.StartLinkAsync(_settings.DeviceId, Environment.MachineName);
+                if (start == null)
+                {
+                    SetStatus(error);
+                    return false;
+                }
+
+                LinkCode = start.UserCode;
+                LinkUrl = start.VerifyUrl;
+                Log.Info("Összekötés indult, kód: " + start.UserCode);
+                SetStatus("Hagyd jóvá az összekötést a böngészőben megnyílt oldalon.");
+                openUrl(start.VerifyUrl);
+
+                var deadline = DateTime.UtcNow + start.ExpiresIn;
+                while (DateTime.UtcNow < deadline)
+                {
+                    await Task.Delay(start.Interval, cts.Token);
+                    var poll = await HshuApiClient.PollLinkAsync(start.DeviceCode);
+                    cts.Token.ThrowIfCancellationRequested();
+                    switch (poll.Status)
+                    {
+                        case LinkPollStatus.Approved:
+                            _settings.ProtectedToken = TokenStore.Protect(poll.Token);
+                            _settings.LinkedUserName = poll.UserName;
+                            _settings.Save();
+                            Log.Info($"Összekapcsolva: {poll.UserName}");
+                            SetStatus("Sikeres összekapcsolás." + (_reader.State == GameState.NotRunning
+                                ? " A gyűjtemény a Hearthstone indítása után töltődik fel."
+                                : " Feltöltés indul…"));
+                            return true;
+                        case LinkPollStatus.Failed:
+                            Log.Warn("Összekötés sikertelen: " + poll.Message);
+                            SetStatus(poll.Message);
+                            return false;
+                    }
+                }
+                SetStatus("Az összekötési kód lejárt. Kattints újra az összekötés gombra.");
                 return false;
             }
-
-            SetStatus("Token ellenőrzése…");
-            var result = await HshuApiClient.WhoAmIAsync(token);
-            switch (result.Status)
+            catch (OperationCanceledException)
             {
-                case ApiStatus.Ok:
-                    _settings.ProtectedToken = TokenStore.Protect(token);
-                    _settings.LinkedUserName = result.UserName;
-                    _settings.Save();
-                    Log.Info($"Összekapcsolva: {result.UserName}");
-                    SetStatus("Sikeres összekapcsolás." + (_reader.State == GameState.NotRunning
-                        ? " A gyűjtemény a Hearthstone indítása után töltődik fel."
-                        : " Feltöltés indul…"));
-                    return true;
-                case ApiStatus.InvalidToken:
-                    SetStatus(result.Message ?? "A token érvénytelen vagy vissza lett vonva. Hozz létre újat a Hearthstone Hungary profilodban.");
-                    return false;
-                default:
-                    SetStatus(result.Message);
-                    return false;
+                SetStatus("Az összekötés megszakítva.");
+                return false;
+            }
+            finally
+            {
+                _linkCts = null;
+                LinkCode = null;
+                LinkUrl = null;
+                cts.Dispose();
+                StatusChanged?.Invoke();
             }
         }
 
-        public void Unlink()
+        /// <summary>A folyamatban lévő összekötés megszakítása (a kód a szerveren magától lejár).</summary>
+        public void CancelLink() => _linkCts?.Cancel();
+
+        /// <summary>Leválasztás: a szerveren is visszavonjuk ennek az eszköznek a tokenjét, aztán töröljük.</summary>
+        public async Task UnlinkAsync()
         {
+            var token = TokenStore.Unprotect(_settings.ProtectedToken);
             _settings.ProtectedToken = null;
             _settings.LinkedUserName = null;
             _settings.Save();
-            Log.Info("Leválasztva.");
-            SetStatus("Az alkalmazás le van választva a Hearthstone Hungary profilodról.");
+            var revoked = token == null || await HshuApiClient.UnlinkAsync(token);
+            Log.Info(revoked ? "Leválasztva." : "Leválasztva, de a szerveren nem sikerült visszavonni a tokent.");
+            SetStatus(revoked
+                ? "Az alkalmazás le van választva a Hearthstone Hungary profilodról."
+                : "Az alkalmazás le van választva. A szervert nem értem el, ezért az eszközt a profilod Gyűjtemény fülén is válaszd le.");
         }
 
         public async Task SyncAsync(SyncTrigger trigger)
@@ -130,7 +185,7 @@ namespace HearthstoneHungary.Core
             if (token == null)
             {
                 if (manual)
-                    SetStatus("Előbb kapcsold össze az alkalmazást a Hearthstone Hungary profiloddal (token).");
+                    SetStatus("Előbb kösd össze az alkalmazást a Hearthstone Hungary profiloddal.");
                 return;
             }
             if (!manual)
@@ -188,7 +243,7 @@ namespace HearthstoneHungary.Core
                     _settings.LinkedUserName = null;
                     _settings.Save();
                     Log.Warn("A szerver elutasította a tokent, leválasztva.");
-                    SetStatus("Az alkalmazás leválasztódott: " + (result.Message ?? "a token érvénytelen vagy vissza lett vonva.") + " Új tokent a Hearthstone Hungary profilodban hozhatsz létre.");
+                    SetStatus("Az alkalmazás leválasztódott: " + (result.Message ?? "az eszközt leválasztották a profilodról.") + (result.Message == null ? " Kösd össze újra az összekötés gombbal." : ""));
                     break;
                 default:
                     if (!manual)

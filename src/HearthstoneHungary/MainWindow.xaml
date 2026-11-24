@@ -110,14 +110,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <Style TargetType="{x:Type PasswordBox}">
-            <Setter Property="Background" Value="{DynamicResource InputBackground}"/>
-            <Setter Property="Foreground" Value="{DynamicResource HshuText}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}"/>
-            <Setter Property="CaretBrush" Value="{DynamicResource HshuText}"/>
-            <Setter Property="SelectionBrush" Value="{DynamicResource HshuBlue}"/>
-        </Style>
     </Window.Resources>
 
     <Grid Background="{DynamicResource WindowBase}">
@@ -141,21 +133,28 @@
                     <TextBlock Style="{StaticResource CardTitle}" Text="Gyűjtemény feltöltése a HSHU profilodba"/>
                     <TextBlock x:Name="LinkStatusText" Style="{StaticResource BodyText}" FontWeight="SemiBold" Margin="0,0,0,8"/>
 
-                    <StackPanel x:Name="TokenPanel">
-                        <TextBlock Style="{StaticResource MutedText}" Margin="0,0,0,6">
-                            <Run Text="Hozz létre egy tokent a Hearthstone Hungary profilodban (Gyűjtemény fül), és másold be ide."/>
-                            <Hyperlink Click="TokenHelp_Click" Foreground="{DynamicResource HshuLink}">Token létrehozása</Hyperlink>
+                    <!-- Nincs összekötve: egy gomb, a többi a böngészőben történik -->
+                    <StackPanel x:Name="LinkPanel">
+                        <TextBlock Style="{StaticResource MutedText}" Margin="0,0,0,8">
+                            <Run Text="Kattints a gombra, és a böngészőben megnyíló oldalon hagyd jóvá. Egy profilhoz több gépet (pl. asztali gép és laptop) is összeköthetsz."/>
+                            <Hyperlink Click="AppPage_Click" Foreground="{DynamicResource HshuLink}">Bővebben</Hyperlink>
                         </TextBlock>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <PasswordBox x:Name="TokenBox" Grid.Column="0" Margin="0,0,8,0" Padding="4,0" VerticalContentAlignment="Center"
-                                         ToolTip="Token beillesztése" KeyDown="TokenBox_KeyDown"/>
-                            <Button x:Name="SaveTokenButton" Grid.Column="1" Style="{StaticResource HshuButton}"
-                                    Content="Összekapcsolás" Click="SaveToken_Click"/>
-                        </Grid>
+                        <Button x:Name="LinkButton" Style="{StaticResource HshuButton}" HorizontalAlignment="Left"
+                                Content="Összekötés a HSHU profiloddal" Click="Link_Click"/>
+                    </StackPanel>
+
+                    <!-- Összekötés közben: a kód, amit a böngészőben is látni kell -->
+                    <StackPanel x:Name="LinkWaitPanel" Visibility="Collapsed">
+                        <TextBlock Style="{StaticResource MutedText}" Text="Hagyd jóvá az összekötést a böngészőben megnyílt oldalon. Ott is ezt a kódot kell látnod:"/>
+                        <TextBlock x:Name="LinkCodeText" FontFamily="Consolas" FontSize="24" FontWeight="Bold" Margin="0,6,0,8"
+                                   Foreground="{DynamicResource HshuBlue}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="CancelLinkButton" Style="{StaticResource SecondaryButton}" Content="Mégse" Click="CancelLink_Click"/>
+                            <TextBlock Style="{StaticResource MutedText}" Margin="12,0,0,0" VerticalAlignment="Center">
+                                <Run Text="Nem nyílt meg?"/>
+                                <Hyperlink Click="OpenLinkPage_Click" Foreground="{DynamicResource HshuLink}">Oldal megnyitása</Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">

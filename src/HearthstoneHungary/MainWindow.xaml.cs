@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using System.Windows.Input;
 using HearthstoneHungary.Core;
 
 namespace HearthstoneHungary
@@ -88,12 +87,14 @@ namespace HearthstoneHungary
             LinkStatusText.Text = linked
                 ? "Összekapcsolva" + (string.IsNullOrEmpty(_app.Sync.LinkedUserName) ? "" : ": " + _app.Sync.LinkedUserName)
                 : "Nincs összekapcsolva";
-            TokenPanel.Visibility = linked ? Visibility.Collapsed : Visibility.Visible;
+            var linking = _app.Sync.IsLinking;
+            LinkPanel.Visibility = !linked && !linking ? Visibility.Visible : Visibility.Collapsed;
+            LinkWaitPanel.Visibility = linking ? Visibility.Visible : Visibility.Collapsed;
+            LinkCodeText.Text = _app.Sync.LinkCode ?? "";
             UnlinkButton.Visibility = linked ? Visibility.Visible : Visibility.Collapsed;
             UploadNowButton.Visibility = linked ? Visibility.Visible : Visibility.Collapsed;
             AutoUploadCheck.IsEnabled = linked;
             UploadNowButton.IsEnabled = !busy;
-            SaveTokenButton.IsEnabled = !busy;
             UploadStatusText.Text = _app.Sync.StatusText;
         }
 
@@ -130,46 +131,58 @@ namespace HearthstoneHungary
             _app.Settings.Save();
         }
 
-        private void TokenHelp_Click(object sender, RoutedEventArgs e) => OpenUrl(HshuConfig.TokenPageUrl);
+        private void AppPage_Click(object sender, RoutedEventArgs e) => OpenUrl(HshuConfig.AppPageUrl);
 
-        private void TokenBox_KeyDown(object sender, KeyEventArgs e)
+        private async void Link_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Enter)
-                SaveToken_Click(sender, e);
-        }
-
-        private async void SaveToken_Click(object sender, RoutedEventArgs e)
-        {
-            SaveTokenButton.IsEnabled = false;
+            LinkButton.IsEnabled = false;
             try
             {
-                if (await _app.Sync.LinkAsync(TokenBox.Password))
+                if (await _app.Sync.LinkViaBrowserAsync(OpenUrl))
                 {
-                    TokenBox.Clear();
+                    // a jóváhagyás után a böngészőből visszahozzuk az ablakot
+                    _app.ShowMainWindow();
                     if (_app.GameState == GameState.Ready)
                         await _app.Sync.SyncAsync(SyncTrigger.Manual);
                 }
             }
             catch (Exception ex)
             {
-                Log.Error("Összekapcsolás: " + ex);
-                ShowError("Hiba az összekapcsolás közben: " + ex.Message);
+                Log.Error("Összekötés: " + ex);
+                ShowError("Hiba az összekötés közben: " + ex.Message);
             }
             finally
             {
+                LinkButton.IsEnabled = true;
                 RefreshSyncUi();
             }
         }
 
-        private void Unlink_Click(object sender, RoutedEventArgs e)
+        private void CancelLink_Click(object sender, RoutedEventArgs e) => _app.Sync.CancelLink();
+
+        private void OpenLinkPage_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_app.Sync.LinkUrl))
+                OpenUrl(_app.Sync.LinkUrl);
+        }
+
+        private async void Unlink_Click(object sender, RoutedEventArgs e)
         {
             var answer = MessageBox.Show(this,
-                "Biztosan leválasztod az alkalmazást a Hearthstone Hungary profilodról?\n\nA gyűjteményed nem frissül tovább magától. A tokent a profilodban is érdemes visszavonni.",
+                "Biztosan leválasztod ezt a gépet a Hearthstone Hungary profilodról?\n\nA gyűjteményed innen nem frissül tovább magától. Később újra összekötheted.",
                 "Leválasztás", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (answer != MessageBoxResult.Yes)
                 return;
-            _app.Sync.Unlink();
-            RefreshSyncUi();
+            UnlinkButton.IsEnabled = false;
+            try
+            {
+                await _app.Sync.UnlinkAsync();
+            }
+            finally
+            {
+                UnlinkButton.IsEnabled = true;
+                RefreshSyncUi();
+            }
         }
 
         private async void UploadNow_Click(object sender, RoutedEventArgs e)

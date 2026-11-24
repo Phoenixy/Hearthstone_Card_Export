@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using HearthstoneHungary.Core;
 
@@ -8,8 +9,13 @@ namespace HearthstoneHungary
 {
     public partial class MainWindow
     {
+        private const string NoDecksText = "Még nem láttam paklit. Indíts el egy meccset a Hearthstone-ban, és a paklid megjelenik itt. (Ha most telepítetted az alkalmazást, előbb indítsd újra a játékot.)";
+
         private readonly App _app;
         private bool _initializing = true;
+        private bool _fillingDecks;
+        private string _selectedDeckKey;
+        private string _deckMessage;
 
         internal MainWindow(App app)
         {
@@ -25,6 +31,7 @@ namespace HearthstoneHungary
             _app.Sync.StatusChanged += OnSyncStatusChanged;
             _app.Updater.StatusChanged += OnUpdaterStatusChanged;
             _app.GameStateChanged += RefreshGameUi;
+            _app.Decks.Changed += OnDecksChanged;
             ThemeManager.Changed += OnThemeChanged;
             SourceInitialized += (sender, args) => ThemeManager.ApplyTitleBar(this);
             Closed += (sender, args) =>
@@ -32,11 +39,13 @@ namespace HearthstoneHungary
                 _app.Sync.StatusChanged -= OnSyncStatusChanged;
                 _app.Updater.StatusChanged -= OnUpdaterStatusChanged;
                 _app.GameStateChanged -= RefreshGameUi;
+                _app.Decks.Changed -= OnDecksChanged;
                 ThemeManager.Changed -= OnThemeChanged;
             };
 
             RefreshGameUi();
             RefreshSyncUi();
+            RefreshDeckUi();
             RefreshUpdateUi();
             _initializing = false;
         }
@@ -57,6 +66,8 @@ namespace HearthstoneHungary
         private void OnSyncStatusChanged() => Dispatcher.BeginInvoke(new Action(RefreshSyncUi));
 
         private void OnUpdaterStatusChanged() => Dispatcher.BeginInvoke(new Action(RefreshUpdateUi));
+
+        private void OnDecksChanged() => Dispatcher.BeginInvoke(new Action(RefreshDeckUi));
 
         // A színeket a DynamicResource-ok maguktól követik, csak a címsort kell átállítani.
         private void OnThemeChanged() => ThemeManager.ApplyTitleBar(this);
@@ -96,6 +107,67 @@ namespace HearthstoneHungary
             AutoUploadCheck.IsEnabled = linked;
             UploadNowButton.IsEnabled = !busy;
             UploadStatusText.Text = _app.Sync.StatusText;
+            DeckCard.Visibility = linked ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        /// <summary>A paklik listája: az utoljára játszott elöl; a felhasználó választása megmarad, amíg a pakli létezik.</summary>
+        private void RefreshDeckUi()
+        {
+            var decks = _app.Decks.Decks;
+            _fillingDecks = true;
+            try
+            {
+                DeckCombo.ItemsSource = decks;
+                var selected = decks.FirstOrDefault(d => d.Key == _selectedDeckKey) ?? decks.FirstOrDefault();
+                DeckCombo.SelectedItem = selected;
+                _selectedDeckKey = selected?.Key;
+            }
+            finally
+            {
+                _fillingDecks = false;
+            }
+            var any = decks.Count > 0;
+            DeckCombo.Visibility = any ? Visibility.Visible : Visibility.Collapsed;
+            DeckButtons.Visibility = any ? Visibility.Visible : Visibility.Collapsed;
+            DeckStatusText.Text = any ? (_deckMessage ?? "A játékban használt paklijaid; az utoljára játszott van elöl.") : NoDecksText;
+        }
+
+        private void DeckCombo_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (_fillingDecks)
+                return;
+            _selectedDeckKey = (DeckCombo.SelectedItem as SavedDeck)?.Key;
+            _deckMessage = null;
+            DeckStatusText.Text = "A játékban használt paklijaid; az utoljára játszott van elöl.";
+        }
+
+        private void DeckCreate_Click(object sender, RoutedEventArgs e) => SendDeck("instant",
+            "Megnyitottam a böngészőben: a pakli létrejön a profilodban, és a pakli oldalára kerülsz.");
+
+        private void DeckBuilder_Click(object sender, RoutedEventArgs e) => SendDeck("builder",
+            "Megnyitottam a böngészőben a pakli készítőt a pakli lapjaival.");
+
+        private async void SendDeck(string mode, string successText)
+        {
+            var deck = DeckCombo.SelectedItem as SavedDeck;
+            if (deck == null)
+                return;
+            DeckCreateButton.IsEnabled = DeckBuilderButton.IsEnabled = false;
+            try
+            {
+                _deckMessage = await _app.Sync.OpenDeckOnSiteAsync(deck, mode, OpenUrl) ?? successText;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Pakli küldése: " + ex);
+                _deckMessage = "Hiba a pakli küldése közben: " + ex.Message;
+            }
+            finally
+            {
+                DeckCreateButton.IsEnabled = DeckBuilderButton.IsEnabled = true;
+                DeckStatusText.Text = _deckMessage;
+                RefreshSyncUi();
+            }
         }
 
         private void RefreshUpdateUi()

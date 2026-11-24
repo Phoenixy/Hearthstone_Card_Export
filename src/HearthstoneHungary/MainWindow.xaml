@@ -110,6 +110,81 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Saját legördülő lista (a Windows alapértelmezettje sötét megjelenésben világos maradna). -->
+        <Style TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="Foreground" Value="{DynamicResource HshuText}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                        <Border x:Name="Bd" Background="Transparent" Padding="8,5">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource HshuBlue}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="Foreground" Value="{DynamicResource HshuText}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="MaxDropDownHeight" Value="240"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <ToggleButton Focusable="False" ClickMode="Press"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                        <Border x:Name="Box" CornerRadius="2" BorderThickness="1"
+                                                Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource InputBorder}">
+                                            <Path HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0"
+                                                  Data="M 0,0 L 4,4 L 8,0" Stroke="{DynamicResource HshuMuted}" StrokeThickness="1.6"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource HshuBlue}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource HshuBlue}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <ContentPresenter IsHitTestVisible="False" Margin="9,0,28,0" VerticalAlignment="Center"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+                            <Popup x:Name="PART_Popup" Placement="Bottom" Focusable="False" AllowsTransparency="True" PopupAnimation="Fade"
+                                   IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}">
+                                <Border Margin="0,2,0,0" BorderThickness="1" CornerRadius="2"
+                                        Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource InputBorder}"
+                                        MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                        MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid Background="{DynamicResource WindowBase}">
@@ -163,6 +238,21 @@
                     </StackPanel>
 
                     <TextBlock x:Name="UploadStatusText" Style="{StaticResource MutedText}" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Pakli feltöltése az oldalra (csak összekötve látszik) -->
+            <Border x:Name="DeckCard" Style="{StaticResource Card}" Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource CardTitle}" Text="Pakli feltöltése a HSHU-ra"/>
+                    <ComboBox x:Name="DeckCombo" Margin="0,0,0,10" SelectionChanged="DeckCombo_SelectionChanged"/>
+                    <StackPanel x:Name="DeckButtons" Orientation="Horizontal">
+                        <Button x:Name="DeckCreateButton" Style="{StaticResource HshuButton}" Content="Létrehozás az oldalon" Click="DeckCreate_Click"
+                                ToolTip="A pakli egy kattintással létrejön a Hearthstone Hungary profilodban, a játékbeli nevével."/>
+                        <Button x:Name="DeckBuilderButton" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Content="Megnyitás a pakli készítőben" Click="DeckBuilder_Click"
+                                ToolTip="A pakli készítő nyílik meg a lapokkal: ott átnézheted, módosíthatod, és megadhatod a nevét, leírását."/>
+                    </StackPanel>
+                    <TextBlock x:Name="DeckStatusText" Style="{StaticResource MutedText}" Margin="0,8,0,0"/>
                 </StackPanel>
             </Border>
 

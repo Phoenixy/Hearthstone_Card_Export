@@ -7,6 +7,7 @@ vannak; ha valamelyik megváltozik, ott írd át, és adj ki új verziót.
 |---|---|
 | Gyűjtemény (feltöltés, token ellenőrzése) | `https://hearthstonehungary.hu/api/app/collection.php` |
 | Összekötés, leválasztás | `https://hearthstonehungary.hu/api/app/link.php` |
+| Pakli küldése az oldalra | `https://hearthstonehungary.hu/api/app/deck.php` |
 | Legfrissebb hírek (értesítéshez) | `https://hearthstonehungary.hu/api/app/news.php` |
 | Jóváhagyó oldal (a böngészőben) | `https://hearthstonehungary.hu/app/connect/<kód>` |
 | Leírás / összekötött eszközök | `https://hearthstonehungary.hu/app` (belépve a profil Gyűjtemény fülére visz: `/profile/<név>/collection#app`) |
@@ -101,6 +102,30 @@ X-HSHU-Token: 3f9a...
 { "ok": true, "user": "PHOENIX" }
 ```
 
+### Pakli küldése (`/api/app/deck.php`)
+
+Az alkalmazás a játék `Decks.log` naplójából olvassa ki a paklik nevét és kódját (lásd `Core/DeckTracker.cs`), és így küldi az oldalra:
+
+```
+POST /api/app/deck.php
+X-HSHU-Token: 3f9a...
+```
+
+```json
+{ "action": "ticket", "mode": "instant", "deckstring": "AAECAf0EBu0F…", "name": "Pakli neve" }
+```
+
+```json
+{ "ok": true, "url": "https://hearthstonehungary.hu/deck-import?ticket=…" }
+```
+
+- `mode`: `instant` = a pakli azonnal létrejön a megadott névvel; `builder` = a pakli készítő nyílik meg a lapokkal.
+- Az alkalmazás a kapott címet megnyitja a böngészőben. A pakli importáló oldal a jegy alapján kitölti az űrlapot, és magától
+  elindítja ugyanazt, amit a kézi „Létrehozás” / „Lapok összeállítása” gomb (így a kiforgott lapok cseréje, a tiltott lapok stb. kezelése közös).
+- A jegy egyszer használható, 10 percig érvényes, és csak a tulajdonosának indul el magától (más fióknál vagy belépés nélkül az oldal
+  csak üzenetet ír ki), így egy idegen link nem tud a felhasználó nevében paklit létrehozni. Óránként legfeljebb 30 jegy kérhető.
+- Hibák: 400 `bad_deck` (nem pakli kód), 401 (leválasztott eszköz), 403 `no_access`, 429 `rate_limited`.
+
 ### Hírek (`/api/app/news.php`)
 
 `GET`, token nélkül (nyilvános adat). A megjelenés ideje szerint a legújabb 5 cikk; a későbbi szerkesztés nem számít új hírnek.
@@ -172,7 +197,7 @@ Sikeres válasz:
 
 A hearthstonehungary.hu kódjában:
 
-- `api/app/collection.php`: feltöltés. `api/app/link.php`: összekötés és leválasztás.
+- `api/app/collection.php`: feltöltés. `api/app/link.php`: összekötés és leválasztás. `api/app/deck.php`: pakli küldése. `api/app/news.php`: hírek.
 - `function/app_function.php`: eszközök és tokenek, összekötési kérések, kártyaazonosító → dbfId, a gyűjtemény mentése.
 - `modules/app_box.php`: az összekötött eszközök a profil Gyűjtemény fülén. `modules/app.php`: a `/app` leírás és a
   `/app/connect/<kód>` jóváhagyó oldal (a POST-ot a `modules/h_404.php` dolgozza fel, mielőtt bármi kiíródna).

@@ -14,6 +14,9 @@ namespace HearthstoneHungary.Core
         /// <summary>POST: összekötés indítása / állapota (kód alapján, a böngészőben jóváhagyva), leválasztás.</summary>
         public const string LinkApiUrl = SiteUrl + "/api/app/link.php";
 
+        /// <summary>POST: pakli küldése az oldalra (egyszer használható jegy a pakli importálóhoz).</summary>
+        public const string DeckApiUrl = SiteUrl + "/api/app/deck.php";
+
         /// <summary>GET: a legfrissebb hírek címe és linkje (az "új hír" értesítéshez; token nélkül).</summary>
         public const string NewsApiUrl = SiteUrl + "/api/app/news.php";
 

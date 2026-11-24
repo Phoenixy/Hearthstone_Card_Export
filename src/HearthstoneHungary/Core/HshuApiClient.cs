@@ -134,9 +134,39 @@ namespace HearthstoneHungary.Core
             return status == HttpStatusCode.OK && json?.Value<bool?>("ok") == true;
         }
 
-        private static async Task<(HttpStatusCode Status, JObject Json, string Error)> PostLinkAsync(JObject payload, string token)
+        /// <summary>
+        /// Pakli küldése az oldalra: a szerver egyszer használható címet ad, amit a böngészőben megnyitva a pakli létrejön
+        /// (<paramref name="mode"/> = "instant"), vagy a pakli készítő nyílik meg vele ("builder").
+        /// </summary>
+        /// <returns>Siker esetén a megnyitandó cím az üzenetben (Status = Ok); különben a hiba.</returns>
+        public static async Task<ApiResult> CreateDeckTicketAsync(string token, string mode, string deckstring, string name)
         {
-            using (var request = new HttpRequestMessage(HttpMethod.Post, HshuConfig.LinkApiUrl))
+            var payload = new JObject { ["action"] = "ticket", ["mode"] = mode, ["deckstring"] = deckstring, ["name"] = name };
+            var (status, json, error) = await PostJsonAsync(HshuConfig.DeckApiUrl, payload, token).ConfigureAwait(false);
+            if (error != null)
+                return new ApiResult(ApiStatus.NetworkError, null, error);
+            var message = json?.Value<string>("message");
+            if (status == HttpStatusCode.OK && json?.Value<bool?>("ok") == true)
+            {
+                var url = json.Value<string>("url");
+                // Csak a saját oldalunkat nyitjuk meg a böngészőben.
+                if (url == null || !url.StartsWith(HshuConfig.SiteUrl + "/", StringComparison.OrdinalIgnoreCase))
+                    return new ApiResult(ApiStatus.ServerError, null, "A szerver hibás választ adott, próbáld újra később.");
+                return new ApiResult(ApiStatus.Ok, null, url);
+            }
+            if (status == HttpStatusCode.Unauthorized)
+                return new ApiResult(ApiStatus.InvalidToken, null, message);
+            if ((int)status == 429)
+                return new ApiResult(ApiStatus.RateLimited, null, message ?? "Túl sok kérés, próbáld újra később.");
+            return new ApiResult(ApiStatus.ServerError, null, message ?? $"A szerver hibát adott vissza (HTTP {(int)status}).");
+        }
+
+        private static Task<(HttpStatusCode Status, JObject Json, string Error)> PostLinkAsync(JObject payload, string token) =>
+            PostJsonAsync(HshuConfig.LinkApiUrl, payload, token);
+
+        private static async Task<(HttpStatusCode Status, JObject Json, string Error)> PostJsonAsync(string url, JObject payload, string token)
+        {
+            using (var request = new HttpRequestMessage(HttpMethod.Post, url))
             {
                 if (token != null)
                     request.Headers.Add(HshuConfig.TokenHeader, token);

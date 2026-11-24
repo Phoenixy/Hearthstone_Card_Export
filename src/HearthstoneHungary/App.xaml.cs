@@ -49,6 +49,7 @@ namespace HearthstoneHungary
         internal CollectionSync Sync { get; private set; }
         internal AppUpdater Updater { get; private set; }
         internal NewsWatcher News { get; private set; }
+        internal DeckTracker Decks { get; private set; }
 
         /// <summary>A Hearthstone állapota (a UI szálon frissül).</summary>
         internal GameState GameState => _lastGameState;
@@ -89,6 +90,9 @@ namespace HearthstoneHungary
             Sync = new CollectionSync(Settings, Reader);
             Updater = new AppUpdater(Settings);
             News = new NewsWatcher(Settings);
+            Decks = new DeckTracker(Settings);
+            // A paklikhoz (és később a meccsek eredményéhez) a játék naplója kell; a játék az új beállítást a következő indításakor veszi át.
+            HearthstoneLogs.EnsureLoggingEnabled();
             News.NewsFound += (item, more) => Dispatcher.BeginInvoke(new Action(() => ShowBalloon(
                 more > 0 ? $"Új hírek a Hearthstone Hungary-n (+{more} további)" : "Új hír a Hearthstone Hungary-n", item.Title, item.Url)));
             Sync.Uploaded += message => Dispatcher.BeginInvoke(new Action(() => ShowBalloon("Gyűjtemény feltöltve", message)));
@@ -133,6 +137,10 @@ namespace HearthstoneHungary
 
                 // Indításkor (az első körben) és óránként: nem választották-e le az eszközt a profilban.
                 await Sync.CheckLinkAsync(LinkCheckInterval);
+
+                // A játék naplójából a paklik (futó játéknál; a fájl csak akkor olvasódik újra, ha változott).
+                if (state != GameState.NotRunning)
+                    await Task.Run(() => Decks.Refresh(HearthstoneLogs.FindInstallDirectory()));
 
                 if (Settings.NewsNotifications && News.IsCheckDue)
                     await News.CheckAsync();

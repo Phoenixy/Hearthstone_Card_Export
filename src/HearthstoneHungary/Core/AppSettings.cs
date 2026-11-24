@@ -51,6 +51,12 @@ namespace HearthstoneHungary.Core
         /// <summary>Az utolsó sikeres feltöltés Battle.net fiókonként (ha valaki több fiókkal játszik).</summary>
         public List<UploadRecord> Uploads { get; set; } = new List<UploadRecord>();
 
+        /// <summary>A Hearthstone mappája (a legutóbbi futásból), hogy a naplók akkor is megtalálhatók legyenek, ha épp nem fut.</summary>
+        public string HearthstoneDir { get; set; }
+
+        /// <summary>A játék naplójában látott paklik (lásd DeckTracker). A listát mindig újra cseréljük, helyben nem módosítjuk.</summary>
+        public List<SavedDeck> Decks { get; set; } = new List<SavedDeck>();
+
         public static string DataDir => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), FolderName);
 
         private static string FilePath => Path.Combine(DataDir, FileName);
@@ -69,6 +75,7 @@ namespace HearthstoneHungary.Core
                             if (settings != null)
                             {
                                 settings.Uploads = settings.Uploads ?? new List<UploadRecord>();
+                                settings.Decks = settings.Decks ?? new List<SavedDeck>();
                                 settings.EnsureDeviceId();
                                 return settings;
                             }
@@ -134,6 +141,32 @@ namespace HearthstoneHungary.Core
             record.ShownCards = shownCards;
             record.UploadedAtUtc = DateTime.UtcNow;
         }
+    }
+
+    /// <summary>Egy pakli a játékból: a neve, a játékbeli azonosítója és a pakli kód.</summary>
+    [Serializable]
+    public class SavedDeck
+    {
+        public string Name { get; set; }
+
+        /// <summary>A játék pakliazonosítója (0, ha a napló nem írta ki).</summary>
+        public long DeckId { get; set; }
+
+        public string Deckstring { get; set; }
+
+        /// <summary>Mikor láttuk utoljára a naplóban.</summary>
+        public DateTime SeenUtc { get; set; }
+
+        /// <summary>Mikor indítottak vele utoljára meccset (alapérték, ha még nem).</summary>
+        public DateTime PlayedUtc { get; set; }
+
+        /// <summary>Ugyanaz a pakli-e: az azonosító alapján (így a szerkesztett pakli a régit váltja), annak híján a kód alapján.</summary>
+        [XmlIgnore]
+        public string Key => DeckId > 0 ? "id:" + DeckId : "code:" + Deckstring;
+
+        public SavedDeck Clone() => (SavedDeck)MemberwiseClone();
+
+        public override string ToString() => Name ?? "";
     }
 
     [Serializable]

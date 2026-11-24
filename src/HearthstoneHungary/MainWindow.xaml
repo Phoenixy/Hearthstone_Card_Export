@@ -309,6 +309,10 @@
                     <TextBlock x:Name="StatsRecentTitle" Style="{StaticResource BodyText}" FontWeight="SemiBold" Margin="0,10,0,2" Text="Legutóbbi meccsek"/>
                     <TextBlock x:Name="StatsRecentText" Style="{StaticResource MutedText}"/>
                     <TextBlock x:Name="StatsStatusText" Style="{StaticResource MutedText}" Margin="0,8,0,0"/>
+                    <TextBlock Style="{StaticResource MutedText}" Margin="0,6,0,0">
+                        <Run Text="Hogy a meccseidből mi jelenjen meg az oldalon (statisztika a paklijaidnál, aréna paklik, aréna futamok, és hogy mások is lássák-e), azt a profilodban állíthatod be."/>
+                        <Hyperlink Click="SiteSettings_Click" Foreground="{DynamicResource HshuLink}">Megjelenítés beállítása a HSHU-n</Hyperlink>
+                    </TextBlock>
                 </StackPanel>
             </Border>
 
@@ -325,10 +329,14 @@
                               Checked="StartWithWindowsCheck_Changed" Unchecked="StartWithWindowsCheck_Changed"/>
                     <CheckBox x:Name="NewsCheck" Margin="0,6,0,0" Content="Értesítés, ha új hír jelenik meg a Hearthstone Hungary-n"
                               Checked="NewsCheck_Changed" Unchecked="NewsCheck_Changed"/>
-                    <CheckBox x:Name="TrackGamesCheck" Margin="0,6,0,0" Content="Meccsek eredményének rögzítése és feltöltése (statisztika)"
+                    <CheckBox x:Name="TrackGamesCheck" Margin="0,6,0,0" Content="Meccsek és aréna futamok rögzítése és feltöltése"
                               Checked="TrackGamesCheck_Changed" Unchecked="TrackGamesCheck_Changed"/>
                     <CheckBox x:Name="AutoUpdateCheck" Margin="0,6,0,0" Content="Automatikus frissítés (ajánlott)"
                               Checked="AutoUpdateCheck_Changed" Unchecked="AutoUpdateCheck_Changed"/>
+                    <TextBlock Style="{StaticResource MutedText}" Margin="0,10,0,0">
+                        <Run Text="Itt azt állítod be, mit csináljon az alkalmazás. Hogy az oldalon mi jelenjen meg, és ki lássa, az a profilodban állítható:"/>
+                        <Hyperlink Click="SiteSettings_Click" Foreground="{DynamicResource HshuLink}">beállítások a HSHU-n</Hyperlink>
+                    </TextBlock>
                 </StackPanel>
             </Border>
 

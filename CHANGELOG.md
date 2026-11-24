@@ -1,3 +1,9 @@
+v3.2.0.0 - 2026/11/24
+- ÚJDONSÁG: Sötét megjelenés. Az alkalmazás a Windows beállítását követi (Beállítások → Személyre szabás → Színek → Alkalmazás mód), és átállításkor azonnal vált, a címsorral együtt.
+- Új jelölőnégyzetek és tokenmező, amelyek mindkét megjelenésben jól láthatók.
+- Telepített változatnál az automatikus frissítés után a Windows Programok listája is az új verziót mutatja.
+- ÚJDONSÁG: Egykattintásos összekötés. Token másolása helyett az „Összekötés a HSHU profiloddal” gomb megnyitja a jóváhagyó oldalt a böngészőben, ott egy kattintással kész (a kódnak az alkalmazásban és az oldalon is egyeznie kell).
+- ÚJDONSÁG: Több eszköz. Egy profilhoz legfeljebb 5 gép (pl. asztali gép és laptop) köthető össze, a profil Gyűjtemény fülén eszközönként leválaszthatók. A „Leválasztás” gomb a szerveren is visszavonja az eszközt.
 v3.1.0.0 - 2026/11/24
 - Az app mostantól telepíthető.
 v3.0.2.0 - 2026/11/23

@@ -15,6 +15,7 @@
 #endif
 
 [Setup]
+; Az AppId-t a Core\InstallerRegistry.cs is használja (önfrissítéskor ott írja át a verziót a Programok listájában): ha változik, ott is át kell írni.
 AppId={{9F6C4B2A-7E1D-4C8A-B3F5-2A8D6E1C4B90}
 AppName=Hearthstone Hungary
 AppVersion={#AppVersion}

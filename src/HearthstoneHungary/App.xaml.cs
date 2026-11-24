@@ -75,6 +75,7 @@ namespace HearthstoneHungary
             AppUpdater.CleanupOldFiles();
 
             Settings = AppSettings.Load();
+            ThemeManager.Initialize();
             WindowsStartup.Apply(Settings.StartWithWindows);
             Reader = new GameReader();
             Sync = new CollectionSync(Settings, Reader);
@@ -214,6 +215,7 @@ namespace HearthstoneHungary
             Log.Info("Kilépés.");
             _timer?.Stop();
             _showWait?.Unregister(null);
+            ThemeManager.Shutdown();
             if (_trayIcon != null)
             {
                 _trayIcon.Visible = false;

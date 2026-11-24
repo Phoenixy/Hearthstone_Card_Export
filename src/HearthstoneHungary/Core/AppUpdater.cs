@@ -91,6 +91,7 @@ namespace HearthstoneHungary.Core
                     SetState(UpdateState.Checking, $"v{release.Version} letöltése…");
                 var files = await DownloadAndValidateAsync(release);
                 Install(targetDir, files);
+                InstallerRegistry.UpdateDisplayVersion(targetDir, release.Version);
 
                 InstalledVersion = release.Version;
                 Log.Info($"v{release.Version} telepítve ide: {targetDir}");
@@ -171,7 +172,7 @@ namespace HearthstoneHungary.Core
             {
                 foreach (var entry in zip.Entries)
                 {
-                    // Csak a fájlnevet használjuk, így a zipből semmi nem kerülhet a plugin mappáján kívülre.
+                    // Csak a fájlnevet használjuk, így a zipből semmi nem kerülhet a program mappáján kívülre.
                     var name = Path.GetFileName(entry.FullName);
                     if (string.IsNullOrEmpty(name))
                         continue;

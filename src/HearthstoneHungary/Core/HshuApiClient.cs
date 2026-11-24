@@ -41,18 +41,122 @@ namespace HearthstoneHungary.Core
         public int? Cards { get; }
     }
 
+    /// <summary>Összekötés indítása: a böngészőben megnyitandó oldal és a kód (a <see cref="DeviceCode"/> titok, csak a lekérdezéshez kell).</summary>
+    internal sealed class LinkStart
+    {
+        public string DeviceCode;
+        public string UserCode;
+        public string VerifyUrl;
+        public TimeSpan Interval;
+        public TimeSpan ExpiresIn;
+    }
+
+    internal enum LinkPollStatus
+    {
+        /// <summary>Még nem hagyták jóvá.</summary>
+        Pending,
+        Approved,
+        /// <summary>Elutasították, lejárt, nincs jogosultság, elérte az eszközkorlátot: újra kell kezdeni (az üzenet a szerveré).</summary>
+        Failed,
+        /// <summary>Hálózati vagy szerverhiba: a következő lekérdezéssel újrapróbáljuk.</summary>
+        Retry
+    }
+
+    internal sealed class LinkPoll
+    {
+        public LinkPollStatus Status;
+        public string Token;
+        public string UserName;
+        public string Message;
+    }
+
     /// <summary>A hearthstonehungary.hu alkalmazás API hívásai. A formátum leírása: docs/API.md</summary>
     internal static class HshuApiClient
     {
         public const int FormatVersion = 2;
 
-        /// <summary>Token ellenőrzése feltöltés nélkül.</summary>
-        public static async Task<ApiResult> WhoAmIAsync(string token)
+        /// <summary>Összekötés indítása. Hibánál null, és az <paramref name="error"/> a kiírandó üzenet.</summary>
+        public static async Task<(LinkStart Start, string Error)> StartLinkAsync(string deviceId, string deviceName)
         {
-            using (var request = new HttpRequestMessage(HttpMethod.Get, HshuConfig.ApiUrl))
+            var payload = new JObject
             {
-                request.Headers.Add(HshuConfig.TokenHeader, token);
-                return await SendAsync(request).ConfigureAwait(false);
+                ["action"] = "start",
+                ["device_id"] = deviceId,
+                ["device_name"] = deviceName,
+                ["app_version"] = App.Version.ToString()
+            };
+            var (status, json, error) = await PostLinkAsync(payload, null).ConfigureAwait(false);
+            if (error != null)
+                return (null, error);
+            if (status != HttpStatusCode.OK || json?.Value<bool?>("ok") != true)
+                return (null, json?.Value<string>("message") ?? $"A szerver hibát adott vissza (HTTP {(int)status}).");
+
+            var start = new LinkStart
+            {
+                DeviceCode = json.Value<string>("device_code"),
+                UserCode = json.Value<string>("user_code"),
+                VerifyUrl = json.Value<string>("verify_url"),
+                Interval = TimeSpan.FromSeconds(Math.Max(2, json.Value<int?>("interval") ?? 3)),
+                ExpiresIn = TimeSpan.FromSeconds(Math.Max(60, json.Value<int?>("expires_in") ?? 600))
+            };
+            // Csak a saját oldalunkat nyitjuk meg a böngészőben.
+            if (string.IsNullOrEmpty(start.DeviceCode) || string.IsNullOrEmpty(start.UserCode)
+                || start.VerifyUrl == null || !start.VerifyUrl.StartsWith(HshuConfig.SiteUrl + "/", StringComparison.OrdinalIgnoreCase))
+                return (null, "A szerver hibás választ adott, próbáld újra később.");
+            return (start, null);
+        }
+
+        public static async Task<LinkPoll> PollLinkAsync(string deviceCode)
+        {
+            var payload = new JObject { ["action"] = "poll", ["device_code"] = deviceCode };
+            var (status, json, error) = await PostLinkAsync(payload, null).ConfigureAwait(false);
+            if (error != null || (int)status >= 500 || json == null)
+                return new LinkPoll { Status = LinkPollStatus.Retry, Message = error };
+
+            if (status == HttpStatusCode.OK && json.Value<bool?>("ok") == true)
+            {
+                if (json.Value<string>("status") != "approved")
+                    return new LinkPoll { Status = LinkPollStatus.Pending };
+                var token = json.Value<string>("token");
+                if (!TokenStore.LooksValid(token))
+                    return new LinkPoll { Status = LinkPollStatus.Failed, Message = "A szerver hibás tokent küldött, kezdd újra az összekötést." };
+                return new LinkPoll { Status = LinkPollStatus.Approved, Token = token, UserName = json.Value<string>("user") };
+            }
+            if ((int)status == 429)
+                return new LinkPoll { Status = LinkPollStatus.Retry };
+            return new LinkPoll { Status = LinkPollStatus.Failed, Message = json.Value<string>("message") ?? "Az összekötés nem sikerült, kezdd újra." };
+        }
+
+        /// <summary>Leválasztáskor a szerveren is visszavonjuk ennek az eszköznek a tokenjét (ha nem sikerül, a profilban lehet).</summary>
+        public static async Task<bool> UnlinkAsync(string token)
+        {
+            var (status, json, _) = await PostLinkAsync(new JObject { ["action"] = "unlink" }, token).ConfigureAwait(false);
+            return status == HttpStatusCode.OK && json?.Value<bool?>("ok") == true;
+        }
+
+        private static async Task<(HttpStatusCode Status, JObject Json, string Error)> PostLinkAsync(JObject payload, string token)
+        {
+            using (var request = new HttpRequestMessage(HttpMethod.Post, HshuConfig.LinkApiUrl))
+            {
+                if (token != null)
+                    request.Headers.Add(HshuConfig.TokenHeader, token);
+                request.Content = new StringContent(payload.ToString(Formatting.None), Encoding.UTF8, "application/json");
+                try
+                {
+                    using (var response = await Http.Client.SendAsync(request).ConfigureAwait(false))
+                    {
+                        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        return (response.StatusCode, TryParse(body), null);
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+                    return (0, null, "A Hearthstone Hungary nem válaszolt időben.");
+                }
+                catch (HttpRequestException ex)
+                {
+                    return (0, null, "Nem sikerült elérni a Hearthstone Hungary-t: " + (ex.InnerException?.Message ?? ex.Message));
+                }
             }
         }
 

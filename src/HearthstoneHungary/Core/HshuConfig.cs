@@ -11,8 +11,11 @@ namespace HearthstoneHungary.Core
         /// <summary>GET: token ellenőrzése, POST: gyűjtemény feltöltése.</summary>
         public const string ApiUrl = SiteUrl + "/api/app/collection.php";
 
-        /// <summary>Itt hoz létre (és von vissza) tokent a felhasználó.</summary>
-        public const string TokenPageUrl = SiteUrl + "/app";
+        /// <summary>POST: összekötés indítása / állapota (kód alapján, a böngészőben jóváhagyva), leválasztás.</summary>
+        public const string LinkApiUrl = SiteUrl + "/api/app/link.php";
+
+        /// <summary>Az alkalmazás leírása; belépve a profil Gyűjtemény fülére visz (összekötött eszközök).</summary>
+        public const string AppPageUrl = SiteUrl + "/app";
 
         /// <summary>A token ebben a HTTP fejlécben megy. (Az Authorization fejlécet az Apache + proxy_fcgi alapból eldobja.)</summary>
         public const string TokenHeader = "X-HSHU-Token";

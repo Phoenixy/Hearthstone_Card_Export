@@ -37,7 +37,7 @@ namespace HearthstoneHungary.Core
             }
         }
 
-        /// <summary>Csak formai ellenőrzés, hogy ne küldjünk el véletlenül bemásolt szöveget.</summary>
+        /// <summary>Csak formai ellenőrzés a szervertől kapott tokenre.</summary>
         public static bool LooksValid(string token)
         {
             if (string.IsNullOrEmpty(token) || token.Length < MinLength || token.Length > MaxLength)

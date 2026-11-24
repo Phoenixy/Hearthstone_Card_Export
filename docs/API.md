@@ -5,17 +5,40 @@ vannak; ha valamelyik megváltozik, ott írd át, és adj ki új verziót.
 
 | Mi | Cím |
 |---|---|
-| API végpont | `https://hearthstonehungary.hu/api/app/collection.php` |
-| Token létrehozása / visszavonása | `https://hearthstonehungary.hu/app` (belépve a profil Gyűjtemény fülére visz: `/profile/<név>/collection#app`) |
+| Gyűjtemény (feltöltés, token ellenőrzése) | `https://hearthstonehungary.hu/api/app/collection.php` |
+| Összekötés, leválasztás | `https://hearthstonehungary.hu/api/app/link.php` |
+| Jóváhagyó oldal (a böngészőben) | `https://hearthstonehungary.hu/app/connect/<kód>` |
+| Leírás / összekötött eszközök | `https://hearthstonehungary.hu/app` (belépve a profil Gyűjtemény fülére visz: `/profile/<név>/collection#app`) |
+
+## Összekötés és eszközök
+
+Az összekötés a TV-s és konzolos alkalmazásokból ismert „eszközkódos” módszerrel megy (mint az OAuth device flow),
+jelszó és token másolása nélkül:
+
+1. Az alkalmazás `start` kérést küld (`device_id`, gépnév, verzió). A szerver ad egy titkos `device_code`-ot
+   (csak az alkalmazás ismeri) és egy rövid, felhasználónak szóló kódot (`KX7P-29QD`, 10 percig érvényes).
+2. Az alkalmazás megnyitja a böngészőben a `verify_url`-t (`/app/connect/KX7P-29QD`), és kiírja a kódot.
+3. A felhasználó (belépve) az oldalon látja a gép nevét és a kódot, és az **Összekötés** gombbal jóváhagyja.
+   Az oldal figyelmeztet, hogy csak akkor hagyja jóvá, ha az alkalmazásban is ez a kód látszik (így egy idegen által
+   küldött link nem köti össze más gépét a profiljával).
+4. Az alkalmazás közben `interval` másodpercenként `poll` kérést küld; a jóváhagyás utáni első válaszban megkapja
+   a tokent (egyszer: a következő lekérdezés már `expired`).
+
+Eszközök:
+
+- Minden eszköz (telepítés) saját tokent kap. A `device_id` az első indításkor létrejövő véletlen azonosító
+  (`settings.xml`); ugyanennek az eszköznek az újbóli összekötése a régi tokenjét visszavonja, nem számít új eszköznek.
+- Egy profilhoz legfeljebb **5** eszköz köthető. A profil Gyűjtemény fülén látszik a gép neve, az utolsó feltöltés,
+  a lapok száma, a BattleTag és a verzió, és eszközönként leválaszthatók.
+- Felhasználónként egy gyűjtemény van: ha az eszközök különböző Battle.net fiókot töltenek fel, mindig a legutóbbi
+  feltöltés látszik (erre a Gyűjtemény fül figyelmeztet).
 
 ## Token
 
-- A felhasználó a profilja Gyűjtemény fülén hoz létre tokent, és bemásolja az alkalmazásba. Jelszó soha nem kerül az alkalmazásba.
 - Generálás: `bin2hex(random_bytes(32))` (64 karakter). Az alkalmazás csak `A-Z a-z 0-9 _ - .` karaktereket és 20–200 hosszt fogad el.
-- Az adatbázisba csak a hash kerül (`hash('sha256', $token)`), a token csak a létrehozás után egyszer látszik.
-- Felhasználónként egy aktív token van: új token kérésekor a régi azonnal érvényét veszti. A „Leválasztás” gomb visszavonja.
-- A Gyűjtemény fülön látszik az utolsó feltöltés ideje, a lapok száma, a BattleTag és az alkalmazás verziója.
-- Tábla: `jsweb_app_tokens` (a fő adatbázisban, a gyűjtemény mellett).
+- Az adatbázisba csak a hash kerül (`hash('sha256', $token)`), a nyers tokent csak az alkalmazás kapja meg, egyszer.
+- Táblák (a fő adatbázisban): `jsweb_app_tokens` (eszközönként egy sor, `device_id`, `device_name`),
+  `jsweb_app_link_requests` (összekötési kérések; egy napnál régebbieket a következő `start` törli).
 
 ### Miért nem `Authorization` fejléc?
 
@@ -28,9 +51,42 @@ egy saját fejléc viszont gond nélkül átmegy.
 Minden válasz JSON (`Content-Type: application/json; charset=utf-8`), és mindig van benne `ok` (true/false).
 A `message` mezőt (magyarul) az alkalmazás kiírja a felhasználónak.
 
-### GET – token ellenőrzése
+### Összekötés (`/api/app/link.php`)
 
-Az alkalmazás akkor hívja, amikor a felhasználó bemásolja a tokent („Összekapcsolás” gomb).
+Mindegyik `POST`, JSON törzzsel.
+
+**start**
+
+```json
+{ "action": "start", "device_id": "0123456789abcdef0123456789abcdef", "device_name": "ASZTALI-PC", "app_version": "3.2.0" }
+```
+
+```json
+{ "ok": true, "device_code": "4afe…(64 hexa)", "user_code": "KX7P-29QD",
+  "verify_url": "https://hearthstonehungary.hu/app/connect/KX7P-29QD", "interval": 3, "expires_in": 600 }
+```
+
+Egy IP 10 percen belül legfeljebb 10 összekötést indíthat (utána 429).
+
+**poll**
+
+```json
+{ "action": "poll", "device_code": "4afe…" }
+```
+
+| HTTP | Válasz | Az alkalmazás |
+|---|---|---|
+| 200 | `{"ok":true,"status":"pending"}` | vár, és újra kérdez |
+| 200 | `{"ok":true,"status":"approved","token":"…","user":"PHOENIX"}` | elmenti a tokent |
+| 403 | `denied` (elutasította) / `no_access` (nem Premium) | kiírja a `message`-et, vége |
+| 409 | `limit` (már 5 eszköz) | kiírja a `message`-et, vége |
+| 410 | `expired` (lejárt, vagy a tokent már kiadtuk) | kiírja a `message`-et, vége |
+| 429, 5xx, hálózati hiba | | a következő körben újrapróbálja |
+
+**unlink** (`X-HSHU-Token` fejléccel): ennek az eszköznek a tokenje érvényét veszti. Mindig `{"ok":true}`, akkor is,
+ha a token már nem élt.
+
+### GET – token ellenőrzése
 
 ```
 GET /api/app/collection.php
@@ -91,7 +147,7 @@ Sikeres válasz:
 |---|---|---|
 | 200 + `"ok": true` | siker | elmenti, hogy ez a gyűjtemény fent van |
 | 400 | hibás JSON / hibás adat | kiírja a `message`-et |
-| 401 | nincs token, rossz vagy visszavont token | **leválasztja magát** (törli a tokent), és új tokent kér |
+| 401 | nincs token, rossz vagy visszavont (leválasztott) token | **leválasztja magát** (törli a tokent), és újra összeköthető |
 | 413 | túl nagy kérés | kiírja a `message`-et |
 | 426 | túl régi alkalmazás vagy ismeretlen `format` | kiírja a `message`-et (pl. „Frissítsd az alkalmazást”) |
 | 429 | túl sűrű feltöltés (tokenenként percenként 1) | kiírja a `message`-et; automatikus módban 5 percig nem próbálkozik |
@@ -101,9 +157,10 @@ Sikeres válasz:
 
 A hearthstonehungary.hu kódjában:
 
-- `api/app/collection.php`: a végpont.
-- `function/app_function.php`: tokenek (létrehozás, visszavonás, ellenőrzés), kártyaazonosító → dbfId, a gyűjtemény mentése.
-- `modules/app_box.php`: a token kezelése a profil Gyűjtemény fülén. `modules/app.php`: a `/app` oldal vendégeknek.
+- `api/app/collection.php`: feltöltés. `api/app/link.php`: összekötés és leválasztás.
+- `function/app_function.php`: eszközök és tokenek, összekötési kérések, kártyaazonosító → dbfId, a gyűjtemény mentése.
+- `modules/app_box.php`: az összekötött eszközök a profil Gyűjtemény fülén. `modules/app.php`: a `/app` leírás és a
+  `/app/connect/<kód>` jóváhagyó oldal (a POST-ot a `modules/h_404.php` dolgozza fel, mielőtt bármi kiíródna).
 
 A mentés ugyanúgy működik, mint a CSV import: a `jsweb_register_collection` sorában a `normal` / `gold`
 a lap maximumáig (Legendary 1, más 2) tárolja a darabszámot, az `all_normal` / `all_gold` pedig azokat a lapokat,

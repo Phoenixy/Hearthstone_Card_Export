@@ -1,3 +1,6 @@
+v3.5.1.0 - 2026/11/24
+- JAVÍTÁS: Ha az alkalmazás a Hearthstone indulásának legelején csatlakozott, előfordult, hogy a főmenü betöltése után is „Várakozás a főmenüre…” maradt, és csak a játék újraindítása segített. Mostantól megvárja a játék ablakát, és ha 90 másodperc után sem látja a gyűjteményt, magától újracsatlakozik.
+- JAVÍTÁS: A frissítés utáni első indításkor a beállítások mentése nem sikerült, mert a fájlt még a régi példány fogta; most pár másodpercig újrapróbálja.
 v3.5.0.0 - 2026/11/24
 - ÚJDONSÁG: Statisztika. Az alkalmazás a játék naplójából rögzíti a Ranked, Casual és aréna meccseid eredményét (mód, pakli, a két kaszt, győzelem vagy vereség), és feltölti a Hearthstone Hungary profilodba. Az új Statisztika fülön módonként látod a győzelmeket és vereségeket, alatta a legutóbbi meccseket. A Brawl, a baráti és a gép elleni meccsek nem számítanak. A Beállításoknál kikapcsolható.
 - A hírek ellenőrzése 15 perc helyett óránként történik.

@@ -29,6 +29,9 @@ hearthstonehungary.hu profile. Primarily for Hungarian players.*
 az első alkalommal indítsd újra a játékot, és indíts el egy meccset). A „Létrehozás az oldalon” gombbal a pakli egy kattintással
 létrejön a profilodban, a „Megnyitás a pakli készítőben” gombbal előbb átnézheted és módosíthatod.
 
+**Statisztika:** az alkalmazás a játék naplójából (Power.log) rögzíti a Ranked, Casual és aréna meccseid eredményét a paklival és
+a két kaszttal együtt, és feltölti a profilodba. A Statisztika fülön látod az összesítést és a legutóbbi meccseket (kikapcsolható).
+
 **Hírek:** ha új cikk jelenik meg a Hearthstone Hungary-n, tálcaértesítést kapsz (kikapcsolható).
 
 Az ablak bezárásakor a program a tálcán fut tovább; kilépni a tálcaikon menüjéből lehet. Alapból a Windows-szal együtt indul

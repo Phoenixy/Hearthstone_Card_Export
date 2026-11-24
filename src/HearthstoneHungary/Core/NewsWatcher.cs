@@ -23,7 +23,7 @@ namespace HearthstoneHungary.Core
     /// </summary>
     internal sealed class NewsWatcher
     {
-        private static readonly TimeSpan CheckInterval = TimeSpan.FromMinutes(15);
+        private static readonly TimeSpan CheckInterval = TimeSpan.FromHours(1);
 
         /// <summary>Ennél régebbi cikkről nem szólunk (pl. ha a gép napokig ki volt kapcsolva), csak megjegyezzük.</summary>
         private static readonly TimeSpan MaxAge = TimeSpan.FromDays(3);

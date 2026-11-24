@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -15,6 +16,8 @@ namespace HearthstoneHungary.Core
         InvalidToken,
         AppOutdated,
         RateLimited,
+        /// <summary>A szerver hibásnak ítélte az adatot (újraküldve sem menne át).</summary>
+        BadRequest,
         ServerError,
         NetworkError
     }
@@ -74,6 +77,9 @@ namespace HearthstoneHungary.Core
     internal static class HshuApiClient
     {
         public const int FormatVersion = 2;
+
+        /// <summary>A meccsek feltöltésének formátuma (api/app/games.php).</summary>
+        public const int GamesFormatVersion = 1;
 
         /// <summary>Összekötés indítása. Hibánál null, és az <paramref name="error"/> a kiírandó üzenet.</summary>
         public static async Task<(LinkStart Start, string Error)> StartLinkAsync(string deviceId, string deviceName)
@@ -159,6 +165,51 @@ namespace HearthstoneHungary.Core
             if ((int)status == 429)
                 return new ApiResult(ApiStatus.RateLimited, null, message ?? "Túl sok kérés, próbáld újra később.");
             return new ApiResult(ApiStatus.ServerError, null, message ?? $"A szerver hibát adott vissza (HTTP {(int)status}).");
+        }
+
+        /// <summary>Lejátszott meccsek feltöltése (legfeljebb 50 egyszerre). Egy meccs csak egyszer kerül be, ezért bátran újraküldhető.</summary>
+        public static async Task<ApiResult> UploadGamesAsync(string token, IEnumerable<GameRecord> games)
+        {
+            var payload = new JObject
+            {
+                ["format"] = GamesFormatVersion,
+                ["app_version"] = App.Version.ToString(),
+                ["games"] = new JArray(games.Select(g => new JObject
+                {
+                    ["uid"] = g.Uid,
+                    ["played_at"] = g.StartedUtc.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", System.Globalization.CultureInfo.InvariantCulture),
+                    ["duration"] = g.Duration,
+                    ["game_type"] = g.GameType,
+                    ["format_type"] = g.FormatType,
+                    ["result"] = g.Result,
+                    ["first"] = g.First,
+                    ["player_hero"] = g.PlayerHero,
+                    ["opponent_hero"] = g.OpponentHero,
+                    ["deck_id"] = g.DeckId,
+                    ["deck_name"] = g.DeckName,
+                    ["deckstring"] = g.Deckstring,
+                    ["build"] = g.Build
+                }))
+            };
+            var (status, json, error) = await PostJsonAsync(HshuConfig.GamesApiUrl, payload, token).ConfigureAwait(false);
+            if (error != null)
+                return new ApiResult(ApiStatus.NetworkError, null, error);
+            var message = json?.Value<string>("message");
+            if (status == HttpStatusCode.OK && json?.Value<bool?>("ok") == true)
+                return new ApiResult(ApiStatus.Ok, null, message);
+            switch ((int)status)
+            {
+                case 400:
+                    return new ApiResult(ApiStatus.BadRequest, null, message);
+                case 401:
+                    return new ApiResult(ApiStatus.InvalidToken, null, message);
+                case 426:
+                    return new ApiResult(ApiStatus.AppOutdated, null, message);
+                case 429:
+                    return new ApiResult(ApiStatus.RateLimited, null, message);
+                default:
+                    return new ApiResult(ApiStatus.ServerError, null, message ?? $"A szerver hibát adott vissza (HTTP {(int)status}).");
+            }
         }
 
         private static Task<(HttpStatusCode Status, JObject Json, string Error)> PostLinkAsync(JObject payload, string token) =>

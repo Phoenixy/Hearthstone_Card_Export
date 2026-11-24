@@ -13,8 +13,9 @@ hearthstonehungary.hu profile. Primarily for Hungarian players.*
 
 1. Töltsd le a telepítőt: **[HearthstoneHungary-Setup.exe](https://github.com/Phoenixy/Hearthstone_Card_Export/releases/latest/download/HearthstoneHungary-Setup.exe)**
 2. Futtasd a fájlt, és kövesd a telepítő lépéseit (nem kér rendszergazdai jogot, a `%LocalAppData%\HearthstoneHungary` mappába települ, és a Start menüben is megjelenik).
-   Az első indításkor a Windows figyelmeztethet („A Windows megvédte a számítógépet”), mert a program nincs digitálisan aláírva:
-   *További információ → Futtatás mindenképp*.
+   Ha az első indításkor a Windows figyelmeztet („A Windows megvédte a számítógépet”): *További információ → Futtatás mindenképp*.
+   A kiadások digitálisan aláírtak (lásd lent a [Code signing policy](CODE_SIGNING.md) részt); az új aláírásnak a Windows szemében
+   eleinte még nincs „hírneve”, ezért ez a figyelmeztetés az első időkben még megjelenhet.
 
 *(Hordozható, telepítés nélküli változat is elérhető a Release-eknél: `HearthstoneHungary.zip`.)*
 
@@ -74,3 +75,12 @@ Fontos:
 
 A GitHub Actions lefordítja, és létrehozza a `v3.0.1` Release-t a `HearthstoneHungary.zip`-pel és a CHANGELOG bejegyzéssel.
 A felhasználóknál az alkalmazás 6 órán belül letölti.
+
+## Code signing policy
+
+Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org).
+Részletek (mi kerül aláírásra, ki hagyja jóvá, adatvédelem): [CODE_SIGNING.md](CODE_SIGNING.md).
+
+## Licenc
+
+[MIT](LICENSE). A felhasznált külső könyvtárak licencei: [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt).

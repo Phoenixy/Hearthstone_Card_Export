@@ -6,6 +6,10 @@
 # - Ha a master ágra olyan verzió kerül (src/HearthstoneHungary/Properties/AssemblyInfo.cs), amihez még nincs
 #   Release, akkor létrehozza a v<verzió> Release-t a CHANGELOG.md bejegyzésével, a telepítővel
 #   (HearthstoneHungary-Setup.exe) és a HearthstoneHungary.zip-pel (utóbbit használja az automatikus frissítés).
+# - Kódaláírás (SignPath, lásd CODE_SIGNING.md): csak kiadáskor, és csak ha a repó változói között be van állítva a
+#   SIGNPATH_ORGANIZATION_ID (és a titkok között a SIGNPATH_API_TOKEN). Előbb a programot írja alá (a ZIP-ben), a telepítő már az
+#   aláírt fájlokból készül, végül a telepítőt is aláírja. Minden aláírási kérést a SignPathban kézzel kell jóváhagyni.
+#   Opcionális változók: SIGNPATH_PROJECT_SLUG (alapból Hearthstone_Card_Export), SIGNPATH_SIGNING_POLICY_SLUG (alapból release-signing).
 
 name: Build
 
@@ -17,6 +21,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: build-${{ github.ref }}
@@ -27,6 +32,8 @@ jobs:
     runs-on: windows-latest
     env:
       GH_TOKEN: ${{ github.token }}
+      SIGNPATH_PROJECT: ${{ vars.SIGNPATH_PROJECT_SLUG || 'Hearthstone_Card_Export' }}
+      SIGNPATH_POLICY: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG || 'release-signing' }}
     defaults:
       run:
         shell: pwsh
@@ -64,6 +71,12 @@ jobs:
           "exists=$($exists.ToString().ToLower())" >> $env:GITHUB_OUTPUT
           if ($exists) { Write-Host "A $tag Release már létezik, csak fordítás lesz." }
 
+          # Aláírás csak új kiadásnál, és csak ha a SignPath be van állítva
+          $release = ("${{ github.event_name }}" -eq "push") -and ("${{ github.ref }}" -eq "refs/heads/master") -and (-not $exists)
+          $sign = $release -and ("${{ vars.SIGNPATH_ORGANIZATION_ID }}" -ne "")
+          "sign=$($sign.ToString().ToLower())" >> $env:GITHUB_OUTPUT
+          if ($release -and -not $sign) { Write-Host "A SignPath nincs beállítva: a kiadás aláírás nélkül készül." }
+
       - name: Fordítás
         run: |
           dotnet build "src\HearthstoneHungary\HearthstoneHungary.csproj" -c Release
@@ -72,6 +85,46 @@ jobs:
           Write-Host "A csomag tartalma:"
           Add-Type -AssemblyName System.IO.Compression.FileSystem
           [System.IO.Compression.ZipFile]::OpenRead((Resolve-Path "dist\HearthstoneHungary.zip")).Entries | ForEach-Object { Write-Host "  $($_.FullName) ($($_.Length) bájt)" }
+
+      - name: "Aláírás: program feltöltése a SignPathnak"
+        id: upload-unsigned-app
+        if: steps.version.outputs.sign == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: unsigned-app
+          path: dist/HearthstoneHungary.zip
+          archive: false
+
+      - name: "Aláírás: program (jóváhagyásra vár a SignPathban)"
+        if: steps.version.outputs.sign == 'true'
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ env.SIGNPATH_PROJECT }}
+          signing-policy-slug: ${{ env.SIGNPATH_POLICY }}
+          artifact-configuration-slug: app-zip
+          github-artifact-id: ${{ steps.upload-unsigned-app.outputs.artifact-id }}
+          parameters: |
+            version: "${{ steps.version.outputs.version }}"
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 7200
+          output-artifact-directory: signed/app
+          skip-decompress: true
+
+      - name: "Aláírás: az aláírt program a csomagba és a telepítőhöz"
+        if: steps.version.outputs.sign == 'true'
+        run: |
+          $signed = "signed\app\HearthstoneHungary.zip"
+          if (-not (Test-Path $signed)) { throw "Nem érkezett meg az aláírt csomag ($signed)." }
+          Copy-Item $signed "dist\HearthstoneHungary.zip" -Force
+          # a telepítő az obj\zip mappából dolgozik: ide kerülnek az aláírt fájlok
+          $staging = "src\HearthstoneHungary\obj\zip"
+          Remove-Item $staging -Recurse -Force
+          Expand-Archive "dist\HearthstoneHungary.zip" -DestinationPath $staging
+          $sig = Get-AuthenticodeSignature "$staging\HearthstoneHungary.exe"
+          Write-Host "HearthstoneHungary.exe aláírás: $($sig.Status), $($sig.SignerCertificate.Subject)"
+          if ($sig.Status -ne 'Valid') { throw "A HearthstoneHungary.exe aláírása nem érvényes." }
 
       - name: Telepítő (Setup.exe) készítése
         run: |
@@ -90,6 +143,42 @@ jobs:
           $size = (Get-Item "dist\HearthstoneHungary-Setup.exe").Length
           Write-Host "Telepítő kész: dist\HearthstoneHungary-Setup.exe ($size bájt)"
 
+      - name: "Aláírás: telepítő feltöltése a SignPathnak"
+        id: upload-unsigned-setup
+        if: steps.version.outputs.sign == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: unsigned-setup
+          path: dist/HearthstoneHungary-Setup.exe
+          archive: false
+
+      - name: "Aláírás: telepítő (jóváhagyásra vár a SignPathban)"
+        if: steps.version.outputs.sign == 'true'
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ env.SIGNPATH_PROJECT }}
+          signing-policy-slug: ${{ env.SIGNPATH_POLICY }}
+          artifact-configuration-slug: installer
+          github-artifact-id: ${{ steps.upload-unsigned-setup.outputs.artifact-id }}
+          parameters: |
+            version: "${{ steps.version.outputs.version }}"
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 7200
+          output-artifact-directory: signed/setup
+          skip-decompress: true
+
+      - name: "Aláírás: az aláírt telepítő a kiadásba"
+        if: steps.version.outputs.sign == 'true'
+        run: |
+          $signed = "signed\setup\HearthstoneHungary-Setup.exe"
+          if (-not (Test-Path $signed)) { throw "Nem érkezett meg az aláírt telepítő ($signed)." }
+          $sig = Get-AuthenticodeSignature $signed
+          Write-Host "HearthstoneHungary-Setup.exe aláírás: $($sig.Status), $($sig.SignerCertificate.Subject)"
+          if ($sig.Status -ne 'Valid') { throw "A telepítő aláírása nem érvényes." }
+          Copy-Item $signed "dist\HearthstoneHungary-Setup.exe" -Force
+
       - name: Alkalmazás csomagok feltöltése (Artifacts)
         uses: actions/upload-artifact@v7
         with:
@@ -102,6 +191,10 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/master' && steps.version.outputs.exists == 'false'
         run: |
           $tag = "${{ steps.version.outputs.tag }}"
+          # a SignPath Foundation feltétele: a letöltési oldalon is szerepeljen a kódaláírási szabályzat
+          if ("${{ steps.version.outputs.sign }}" -eq "true") {
+              Add-Content "release-notes.md" "`n`n---`nFree code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org). [Code signing policy](https://github.com/$env:GITHUB_REPOSITORY/blob/master/CODE_SIGNING.md)" -Encoding UTF8
+          }
           gh release create $tag "dist\HearthstoneHungary-Setup.exe" "dist\HearthstoneHungary.zip" --repo $env:GITHUB_REPOSITORY --title $tag --notes-file release-notes.md --target $env:GITHUB_SHA
           if ($LASTEXITCODE -ne 0) { throw "A GitHub Release létrehozása nem sikerült." }
           Write-Host "Kész: $tag kiadva (Setup.exe + ZIP). A felhasználóknál az alkalmazás 6 órán belül frissül."

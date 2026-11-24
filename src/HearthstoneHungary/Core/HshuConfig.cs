@@ -26,6 +26,9 @@ namespace HearthstoneHungary.Core
         /// <summary>Az alkalmazás leírása; belépve a profil Gyűjtemény fülére visz (összekötött eszközök).</summary>
         public const string AppPageUrl = SiteUrl + "/app";
 
+        /// <summary>Belépve a profil Gyűjtemény fülének beállításaihoz visz: mi jelenjen meg az oldalon (pakli statisztika, aréna paklik, aréna futamok).</summary>
+        public const string SettingsPageUrl = SiteUrl + "/app/settings";
+
         /// <summary>A token ebben a HTTP fejlécben megy. (Az Authorization fejlécet az Apache + proxy_fcgi alapból eldobja.)</summary>
         public const string TokenHeader = "X-HSHU-Token";
 

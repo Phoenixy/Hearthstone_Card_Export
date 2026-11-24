@@ -299,6 +299,8 @@ namespace HearthstoneHungary
 
         private void AppPage_Click(object sender, RoutedEventArgs e) => OpenUrl(HshuConfig.AppPageUrl);
 
+        private void SiteSettings_Click(object sender, RoutedEventArgs e) => OpenUrl(HshuConfig.SettingsPageUrl);
+
         private async void Link_Click(object sender, RoutedEventArgs e)
         {
             LinkButton.IsEnabled = false;

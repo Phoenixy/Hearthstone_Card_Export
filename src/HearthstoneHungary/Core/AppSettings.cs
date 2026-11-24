@@ -105,23 +105,34 @@ namespace HearthstoneHungary.Core
 
         public void Save()
         {
-            try
+            // Frissítés utáni újraindításkor a régi példány (vagy a víruskereső) egy pillanatig még foghatja a fájlt: pár próbálkozás.
+            for (var attempt = 1; ; attempt++)
             {
-                lock (FileLock)
+                try
                 {
-                    Directory.CreateDirectory(DataDir);
-                    var tempFile = FilePath + ".tmp";
-                    using (var writer = new StreamWriter(tempFile))
-                        new XmlSerializer(typeof(AppSettings)).Serialize(writer, this);
-                    if (File.Exists(FilePath))
-                        File.Replace(tempFile, FilePath, null);
-                    else
-                        File.Move(tempFile, FilePath);
+                    lock (FileLock)
+                    {
+                        Directory.CreateDirectory(DataDir);
+                        var tempFile = FilePath + ".tmp";
+                        using (var writer = new StreamWriter(tempFile))
+                            new XmlSerializer(typeof(AppSettings)).Serialize(writer, this);
+                        if (File.Exists(FilePath))
+                            File.Replace(tempFile, FilePath, null);
+                        else
+                            File.Move(tempFile, FilePath);
+                    }
+                    return;
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Nem sikerült menteni a beállításokat: " + ex);
+                catch (IOException ex) when (attempt < 5)
+                {
+                    Log.Info("A beállítások fájlja foglalt, újrapróbálás: " + ex.Message);
+                    System.Threading.Thread.Sleep(200 * attempt);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Nem sikerült menteni a beállításokat: " + ex);
+                    return;
+                }
             }
         }
 

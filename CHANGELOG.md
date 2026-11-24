@@ -1,3 +1,5 @@
+v3.4.1.0 - 2026/11/24
+- Az ablak fülekre tagolódik (Gyűjtemény, Paklik, Beállítások), így nem lesz túl magas, és az új funkciók külön fület kaphatnak.
 v3.4.0.0 - 2026/11/24
 - ÚJDONSÁG: Pakli feltöltése a Hearthstone Hungary-ra. Az alkalmazás listázza a játékban használt paklijaidat (az utoljára játszott van elöl); a „Létrehozás az oldalon” gombbal egy kattintással létrejön a profilodban a játékbeli nevével, a „Megnyitás a pakli készítőben” gombbal pedig a pakli készítő nyílik meg a lapokkal.
 - Ehhez az alkalmazás bekapcsolja a Hearthstone naplózását (log.config), ahogy a Deck Tracker is tette. A játék a következő indításától ír naplót, a paklik az első elindított meccs után jelennek meg.

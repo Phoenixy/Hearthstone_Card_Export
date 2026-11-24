@@ -160,6 +160,19 @@ namespace HearthstoneHungary.Core
             }
         }
 
+        /// <summary>
+        /// Él-e még a token (feltöltés nélkül). Ha a profilban leválasztották az eszközt, 401 jön (InvalidToken),
+        /// így az alkalmazás akkor is észreveszi, ha épp nem tölt fel semmit.
+        /// </summary>
+        public static async Task<ApiResult> CheckTokenAsync(string token)
+        {
+            using (var request = new HttpRequestMessage(HttpMethod.Get, HshuConfig.ApiUrl))
+            {
+                request.Headers.Add(HshuConfig.TokenHeader, token);
+                return await SendAsync(request).ConfigureAwait(false);
+            }
+        }
+
         public static async Task<ApiResult> UploadAsync(string token, CollectionSnapshot snapshot)
         {
             var payload = new JObject

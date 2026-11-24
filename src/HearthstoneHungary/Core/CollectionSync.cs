@@ -30,6 +30,8 @@ namespace HearthstoneHungary.Core
         private readonly AppSettings _settings;
         private readonly GameReader _reader;
         private int _busy;
+        private int _checking;
+        private DateTime _lastLinkCheckUtc = DateTime.MinValue;
         private DateTime _lastAutomaticFailureUtc = DateTime.MinValue;
 
         public CollectionSync(AppSettings settings, GameReader reader)
@@ -46,6 +48,9 @@ namespace HearthstoneHungary.Core
 
         /// <summary>Sikeres automatikus feltöltés után (a tálcaértesítéshez). A szöveg a szerver üzenete.</summary>
         public event Action<string> Uploaded;
+
+        /// <summary>A szerver elutasította a tokent (pl. a profilban leválasztották az eszközt); a szöveg a kiírt üzenet.</summary>
+        public event Action<string> LinkLost;
 
         public string StatusText { get; private set; } = "";
 
@@ -138,6 +143,58 @@ namespace HearthstoneHungary.Core
         /// <summary>A folyamatban lévő összekötés megszakítása (a kód a szerveren magától lejár).</summary>
         public void CancelLink() => _linkCts?.Cancel();
 
+        /// <summary>
+        /// Él-e még az összekötés a szerveren, legfeljebb <paramref name="minInterval"/>-onként egyszer.
+        /// Indításkor, az ablak megnyitásakor és óránként hívódik, hogy a profilban történt leválasztás akkor is kiderüljön,
+        /// ha épp nincs feltöltés. Hálózati vagy szerverhibánál nem csinál semmit (nem válunk le egy átmeneti hiba miatt).
+        /// </summary>
+        public async Task CheckLinkAsync(TimeSpan minInterval)
+        {
+            var token = TokenStore.Unprotect(_settings.ProtectedToken);
+            if (token == null || IsLinking || IsBusy || DateTime.UtcNow - _lastLinkCheckUtc < minInterval)
+                return;
+            if (Interlocked.Exchange(ref _checking, 1) == 1)
+                return;
+            try
+            {
+                _lastLinkCheckUtc = DateTime.UtcNow;
+                var result = await HshuApiClient.CheckTokenAsync(token);
+                // közben a felhasználó leválasztotta vagy újra összekötötte: ez az eredmény már nem érvényes
+                if (TokenStore.Unprotect(_settings.ProtectedToken) != token)
+                    return;
+                if (result.Status == ApiStatus.InvalidToken)
+                {
+                    OnTokenRejected(result.Message);
+                }
+                else if (result.Status == ApiStatus.Ok && !string.IsNullOrEmpty(result.UserName) && result.UserName != _settings.LinkedUserName)
+                {
+                    _settings.LinkedUserName = result.UserName;
+                    _settings.Save();
+                    StatusChanged?.Invoke();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("Az összekötés ellenőrzése nem sikerült: " + ex.Message);
+            }
+            finally
+            {
+                Volatile.Write(ref _checking, 0);
+            }
+        }
+
+        /// <summary>A szerver elutasította a tokent: töröljük, hogy ne próbálkozzunk vele újra és újra.</summary>
+        private void OnTokenRejected(string serverMessage)
+        {
+            _settings.ProtectedToken = null;
+            _settings.LinkedUserName = null;
+            _settings.Save();
+            Log.Warn("A szerver elutasította a tokent, leválasztva: " + serverMessage);
+            var text = serverMessage ?? "Ezt a gépet leválasztották a Hearthstone Hungary profilodról. Kösd össze újra az összekötés gombbal.";
+            SetStatus(text);
+            LinkLost?.Invoke(text);
+        }
+
         /// <summary>Leválasztás: a szerveren is visszavonjuk ennek az eszköznek a tokenjét, aztán töröljük.</summary>
         public async Task UnlinkAsync()
         {
@@ -229,6 +286,7 @@ namespace HearthstoneHungary.Core
                     var changed = previous == null || previous.Hash != snapshot.Hash;
                     var shown = result.Cards ?? snapshot.TotalCards;
                     _settings.RememberUpload(snapshot.BattleTag, snapshot.Hash, snapshot.TotalCards, shown);
+                    _lastLinkCheckUtc = DateTime.UtcNow; // a sikeres feltöltés is igazolja, hogy él az összekötés
                     if (!string.IsNullOrEmpty(result.UserName))
                         _settings.LinkedUserName = result.UserName;
                     _settings.Save();
@@ -238,12 +296,7 @@ namespace HearthstoneHungary.Core
                         Uploaded?.Invoke(result.Message);
                     break;
                 case ApiStatus.InvalidToken:
-                    // Visszavont token: töröljük, hogy ne próbálkozzunk vele újra és újra.
-                    _settings.ProtectedToken = null;
-                    _settings.LinkedUserName = null;
-                    _settings.Save();
-                    Log.Warn("A szerver elutasította a tokent, leválasztva.");
-                    SetStatus("Az alkalmazás leválasztódott: " + (result.Message ?? "az eszközt leválasztották a profilodról.") + (result.Message == null ? " Kösd össze újra az összekötés gombbal." : ""));
+                    OnTokenRejected(result.Message);
                     break;
                 default:
                     if (!manual)

@@ -171,7 +171,7 @@ namespace HearthstoneHungary.Core
             {
                 foreach (var entry in zip.Entries)
                 {
-                    // Csak a fájlnevet használjuk, így a zipből semmi nem kerülhet a plugin mappáján kívülre.
+                    // Csak a fájlnevet használjuk, így a zipből semmi nem kerülhet a program mappáján kívülre.
                     var name = Path.GetFileName(entry.FullName);
                     if (string.IsNullOrEmpty(name))
                         continue;

@@ -11,15 +11,11 @@
         FontFamily="Segoe UI">
 
     <Window.Resources>
-        <SolidColorBrush x:Key="HshuBlue" Color="#FF427FED"/>
-        <SolidColorBrush x:Key="HshuBlueDark" Color="#FF0E4262"/>
-        <SolidColorBrush x:Key="HshuText" Color="#FF1F2328"/>
-        <SolidColorBrush x:Key="HshuMuted" Color="#FF57606A"/>
-        <SolidColorBrush x:Key="HshuGreen" Color="#FF137333"/>
-        <SolidColorBrush x:Key="HshuOrange" Color="#FFB06000"/>
+        <!-- A színek (HshuBlue, HshuText, CardBackground…) és a háttérkép a Core\ThemeManager.cs-ben vannak,
+             világos és sötét változatban; DynamicResource-szal hivatkozunk rájuk, hogy a Windows témaváltását kövessék. -->
 
         <Style x:Key="HshuButton" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="{StaticResource HshuBlue}"/>
+            <Setter Property="Background" Value="{DynamicResource HshuBlue}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="14,6"/>
@@ -32,7 +28,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource HshuBlueDark}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource HshuBlueDark}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
@@ -44,12 +40,12 @@
         </Style>
 
         <Style x:Key="SecondaryButton" TargetType="{x:Type Button}" BasedOn="{StaticResource HshuButton}">
-            <Setter Property="Background" Value="#FF6B7280"/>
+            <Setter Property="Background" Value="{DynamicResource SecondaryBackground}"/>
         </Style>
 
         <Style x:Key="Card" TargetType="{x:Type Border}">
-            <Setter Property="Background" Value="#EBFFFFFF"/>
-            <Setter Property="BorderBrush" Value="#40427FED"/>
+            <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="4"/>
             <Setter Property="Padding" Value="14,12"/>
@@ -59,31 +55,74 @@
         <Style x:Key="CardTitle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="{StaticResource HshuText}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HshuText}"/>
             <Setter Property="Margin" Value="0,0,0,6"/>
         </Style>
 
         <Style x:Key="BodyText" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="{StaticResource HshuText}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HshuText}"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
 
         <Style x:Key="MutedText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BodyText}">
             <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Foreground" Value="{StaticResource HshuMuted}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HshuMuted}"/>
         </Style>
 
+        <!-- Saját jelölőnégyzet: a Windows alapértelmezettjének pipája sötét háttéren nem látszana. -->
         <Style TargetType="{x:Type CheckBox}">
-            <Setter Property="Foreground" Value="{StaticResource HshuText}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HshuText}"/>
             <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Grid Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="Box" Width="16" Height="16" CornerRadius="2" BorderThickness="1" VerticalAlignment="Center"
+                                    Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource InputBorder}">
+                                <Path x:Name="Mark" Data="M 3,8 L 6.5,11.5 L 13,4.5" Stroke="White" StrokeThickness="2"
+                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Box" Property="Background" Value="{DynamicResource HshuBlue}"/>
+                                <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource HshuBlue}"/>
+                                <Setter TargetName="Mark" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource HshuBlue}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource HshuBlue}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type PasswordBox}">
+            <Setter Property="Background" Value="{DynamicResource InputBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource HshuText}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource HshuText}"/>
+            <Setter Property="SelectionBrush" Value="{DynamicResource HshuBlue}"/>
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <Grid.Background>
-            <ImageBrush ImageSource="Resources/bg-bright-padded.png" Stretch="UniformToFill"/>
-        </Grid.Background>
+    <Grid Background="{DynamicResource WindowBase}">
+        <!-- A háttérkép átlátszó részein a WindowBase szín látszik (fehér / fekete). -->
+        <Border Background="{DynamicResource WindowImage}"/>
 
         <StackPanel Margin="0,12,0,4">
             <Image Source="Resources/HSHU-logo.png" Height="90" HorizontalAlignment="Center" Margin="0,0,0,12"/>
@@ -91,7 +130,7 @@
             <!-- A Hearthstone állapota -->
             <Border Style="{StaticResource Card}">
                 <StackPanel Orientation="Horizontal">
-                    <Ellipse x:Name="GameDot" Width="10" Height="10" Margin="0,0,8,0" VerticalAlignment="Center" Fill="{StaticResource HshuMuted}"/>
+                    <Ellipse x:Name="GameDot" Width="10" Height="10" Margin="0,0,8,0" VerticalAlignment="Center" />
                     <TextBlock x:Name="GameStatusText" Style="{StaticResource BodyText}" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
@@ -105,7 +144,7 @@
                     <StackPanel x:Name="TokenPanel">
                         <TextBlock Style="{StaticResource MutedText}" Margin="0,0,0,6">
                             <Run Text="Hozz létre egy tokent a Hearthstone Hungary profilodban (Gyűjtemény fül), és másold be ide."/>
-                            <Hyperlink Click="TokenHelp_Click" Foreground="{StaticResource HshuBlue}">Token létrehozása</Hyperlink>
+                            <Hyperlink Click="TokenHelp_Click" Foreground="{DynamicResource HshuLink}">Token létrehozása</Hyperlink>
                         </TextBlock>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -158,9 +197,9 @@
                     </Grid>
                     <TextBlock x:Name="UpdateStatusText" Style="{StaticResource MutedText}" Margin="0,6,0,0"/>
                     <TextBlock Style="{StaticResource MutedText}" Margin="0,6,0,0">
-                        <Hyperlink Click="OpenLog_Click" Foreground="{StaticResource HshuBlue}">Napló megnyitása</Hyperlink>
+                        <Hyperlink Click="OpenLog_Click" Foreground="{DynamicResource HshuLink}">Napló megnyitása</Hyperlink>
                         <Run Text=" · "/>
-                        <Hyperlink Click="Exit_Click" Foreground="{StaticResource HshuBlue}">Kilépés a programból</Hyperlink>
+                        <Hyperlink Click="Exit_Click" Foreground="{DynamicResource HshuLink}">Kilépés a programból</Hyperlink>
                     </TextBlock>
                 </StackPanel>
             </Border>

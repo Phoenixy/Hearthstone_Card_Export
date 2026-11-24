@@ -26,11 +26,14 @@ namespace HearthstoneHungary
             _app.Sync.StatusChanged += OnSyncStatusChanged;
             _app.Updater.StatusChanged += OnUpdaterStatusChanged;
             _app.GameStateChanged += RefreshGameUi;
+            ThemeManager.Changed += OnThemeChanged;
+            SourceInitialized += (sender, args) => ThemeManager.ApplyTitleBar(this);
             Closed += (sender, args) =>
             {
                 _app.Sync.StatusChanged -= OnSyncStatusChanged;
                 _app.Updater.StatusChanged -= OnUpdaterStatusChanged;
                 _app.GameStateChanged -= RefreshGameUi;
+                ThemeManager.Changed -= OnThemeChanged;
             };
 
             RefreshGameUi();
@@ -56,21 +59,24 @@ namespace HearthstoneHungary
 
         private void OnUpdaterStatusChanged() => Dispatcher.BeginInvoke(new Action(RefreshUpdateUi));
 
+        // A színeket a DynamicResource-ok maguktól követik, csak a címsort kell átállítani.
+        private void OnThemeChanged() => ThemeManager.ApplyTitleBar(this);
+
         private void RefreshGameUi()
         {
             switch (_app.GameState)
             {
                 case GameState.Ready:
                     GameStatusText.Text = "A Hearthstone fut, a gyűjtemény kiolvasható.";
-                    GameDot.Fill = (System.Windows.Media.Brush)FindResource("HshuGreen");
+                    GameDot.SetResourceReference(System.Windows.Shapes.Shape.FillProperty, "HshuGreen");
                     break;
                 case GameState.Loading:
                     GameStatusText.Text = "A Hearthstone fut, várakozás a főmenüre…";
-                    GameDot.Fill = (System.Windows.Media.Brush)FindResource("HshuOrange");
+                    GameDot.SetResourceReference(System.Windows.Shapes.Shape.FillProperty, "HshuOrange");
                     break;
                 default:
                     GameStatusText.Text = "A Hearthstone nem fut. Indítsd el, és a gyűjteményed magától feltöltődik.";
-                    GameDot.Fill = (System.Windows.Media.Brush)FindResource("HshuMuted");
+                    GameDot.SetResourceReference(System.Windows.Shapes.Shape.FillProperty, "HshuMuted");
                     break;
             }
         }

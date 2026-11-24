@@ -12,5 +12,5 @@ using System.Windows;
 
 // Az alkalmazás verziója innen jön (App.Version). A GitHub Actions ebből a sorból olvassa ki a kiadás verzióját:
 // ha a master ágon olyan verzió van, amihez még nincs Release, elkészíti (a CHANGELOG.md bejegyzésével).
-[assembly: AssemblyVersion("3.4.0.0")]
-[assembly: AssemblyFileVersion("3.4.0.0")]
+[assembly: AssemblyVersion("3.4.1.0")]
+[assembly: AssemblyFileVersion("3.4.1.0")]

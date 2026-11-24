@@ -16,6 +16,7 @@ namespace HearthstoneHungary
         private bool _fillingDecks;
         private string _selectedDeckKey;
         private string _deckMessage;
+        private string _deckListSignature;
 
         internal MainWindow(App app)
         {
@@ -45,7 +46,6 @@ namespace HearthstoneHungary
 
             RefreshGameUi();
             RefreshSyncUi();
-            RefreshDeckUi();
             RefreshUpdateUi();
             _initializing = false;
         }
@@ -107,13 +107,41 @@ namespace HearthstoneHungary
             AutoUploadCheck.IsEnabled = linked;
             UploadNowButton.IsEnabled = !busy;
             UploadStatusText.Text = _app.Sync.StatusText;
-            DeckCard.Visibility = linked ? Visibility.Visible : Visibility.Collapsed;
+            RefreshDeckUi();
+        }
+
+        /// <summary>Fülváltás: a kiválasztott rész látszik, a többi Hidden (a helyük megmarad, így az ablak mérete nem változik).</summary>
+        private void Tab_Checked(object sender, RoutedEventArgs e)
+        {
+            // Az InitializeComponent közben is lefut, amikor a panelek még nem léteznek.
+            if (CollectionPanel == null || DecksPanel == null || SettingsPanel == null)
+                return;
+            CollectionPanel.Visibility = CollectionTab.IsChecked == true ? Visibility.Visible : Visibility.Hidden;
+            DecksPanel.Visibility = DecksTab.IsChecked == true ? Visibility.Visible : Visibility.Hidden;
+            SettingsPanel.Visibility = SettingsTab.IsChecked == true ? Visibility.Visible : Visibility.Hidden;
         }
 
         /// <summary>A paklik listája: az utoljára játszott elöl; a felhasználó választása megmarad, amíg a pakli létezik.</summary>
         private void RefreshDeckUi()
         {
+            var linked = _app.Sync.IsLinked;
             var decks = _app.Decks.Decks;
+            // A listát csak akkor cseréljük, ha tényleg változott (különben a nyitott legördülő lista minden állapotfrissítésnél becsukódna).
+            var signature = string.Join("|", decks.Select(d => d.Key + "/" + d.Name + "/" + d.Deckstring));
+            if (signature != _deckListSignature)
+            {
+                _deckListSignature = signature;
+                FillDeckCombo(decks);
+            }
+            var any = linked && decks.Count > 0;
+            DeckCombo.Visibility = any ? Visibility.Visible : Visibility.Collapsed;
+            DeckButtons.Visibility = any ? Visibility.Visible : Visibility.Collapsed;
+            DeckStatusText.Text = !linked ? "A paklik feltöltéséhez előbb kösd össze az alkalmazást a Hearthstone Hungary profiloddal a Gyűjtemény fülön."
+                : any ? (_deckMessage ?? "A játékban használt paklijaid; az utoljára játszott van elöl.") : NoDecksText;
+        }
+
+        private void FillDeckCombo(System.Collections.Generic.IReadOnlyList<SavedDeck> decks)
+        {
             _fillingDecks = true;
             try
             {
@@ -126,10 +154,6 @@ namespace HearthstoneHungary
             {
                 _fillingDecks = false;
             }
-            var any = decks.Count > 0;
-            DeckCombo.Visibility = any ? Visibility.Visible : Visibility.Collapsed;
-            DeckButtons.Visibility = any ? Visibility.Visible : Visibility.Collapsed;
-            DeckStatusText.Text = any ? (_deckMessage ?? "A játékban használt paklijaid; az utoljára játszott van elöl.") : NoDecksText;
         }
 
         private void DeckCombo_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

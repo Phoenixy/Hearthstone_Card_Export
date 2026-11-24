@@ -185,6 +185,32 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Fül: a kiválasztottat kék aláhúzás jelzi. -->
+        <Style x:Key="TabButton" TargetType="{x:Type RadioButton}">
+            <Setter Property="Foreground" Value="{DynamicResource HshuMuted}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,20,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border x:Name="Line" Background="Transparent" BorderBrush="Transparent" BorderThickness="0,0,0,2" Padding="2,7">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource HshuText}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Line" Property="BorderBrush" Value="{DynamicResource HshuBlue}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource HshuText}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid Background="{DynamicResource WindowBase}">
@@ -192,7 +218,7 @@
         <Border Background="{DynamicResource WindowImage}"/>
 
         <StackPanel Margin="0,12,0,4">
-            <Image Source="Resources/HSHU-logo.png" Height="90" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+            <Image Source="Resources/HSHU-logo.png" Height="72" HorizontalAlignment="Center" Margin="0,0,0,12"/>
 
             <!-- A Hearthstone állapota -->
             <Border Style="{StaticResource Card}">
@@ -202,6 +228,18 @@
                 </StackPanel>
             </Border>
 
+            <!-- Fülek: alattuk mindig csak a kiválasztott rész látszik -->
+            <Border Style="{StaticResource Card}" Padding="14,2,14,0">
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton x:Name="CollectionTab" Style="{StaticResource TabButton}" GroupName="MainTabs" Content="Gyűjtemény" IsChecked="True" Checked="Tab_Checked"/>
+                    <RadioButton x:Name="DecksTab" Style="{StaticResource TabButton}" GroupName="MainTabs" Content="Paklik" Checked="Tab_Checked"/>
+                    <RadioButton x:Name="SettingsTab" Style="{StaticResource TabButton}" GroupName="MainTabs" Content="Beállítások" Checked="Tab_Checked"/>
+                </StackPanel>
+            </Border>
+
+            <!-- A fülek tartalma egymáson van (a nem láthatók Hidden állapotban), így az ablak magassága fülváltáskor nem ugrál -->
+            <Grid>
+            <StackPanel x:Name="CollectionPanel">
             <!-- Automatikus feltöltés -->
             <Border Style="{StaticResource Card}">
                 <StackPanel>
@@ -241,8 +279,11 @@
                 </StackPanel>
             </Border>
 
-            <!-- Pakli feltöltése az oldalra (csak összekötve látszik) -->
-            <Border x:Name="DeckCard" Style="{StaticResource Card}" Visibility="Collapsed">
+            </StackPanel>
+
+            <StackPanel x:Name="DecksPanel" Visibility="Hidden">
+            <!-- Pakli feltöltése az oldalra -->
+            <Border x:Name="DeckCard" Style="{StaticResource Card}">
                 <StackPanel>
                     <TextBlock Style="{StaticResource CardTitle}" Text="Pakli feltöltése a HSHU-ra"/>
                     <ComboBox x:Name="DeckCombo" Margin="0,0,0,10" SelectionChanged="DeckCombo_SelectionChanged"/>
@@ -256,6 +297,9 @@
                 </StackPanel>
             </Border>
 
+            </StackPanel>
+
+            <StackPanel x:Name="SettingsPanel" Visibility="Hidden">
             <!-- Beállítások -->
             <Border Style="{StaticResource Card}">
                 <StackPanel>
@@ -294,6 +338,8 @@
                     </TextBlock>
                 </StackPanel>
             </Border>
+            </StackPanel>
+            </Grid>
         </StackPanel>
     </Grid>
 </Window>

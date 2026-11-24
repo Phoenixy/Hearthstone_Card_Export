@@ -25,9 +25,16 @@ namespace HearthstoneHungary.Core
     {
         private const string ProcessName = "Hearthstone";
 
+        /// <summary>
+        /// Ha a csatlakozás után ennyi ideig sem töltött be a gyűjtemény, újracsatlakozunk. A nagyon korán (a játék ablaka előtt)
+        /// létrehozott olvasó a játék még be nem töltött belső részeit jegyezheti meg, és utána sosem látná betöltöttnek a gyűjteményt.
+        /// </summary>
+        private static readonly TimeSpan ReattachAfter = TimeSpan.FromSeconds(90);
+
         private readonly object _lock = new object();
         private MindVision _mindVision;
         private int _processId;
+        private DateTime _attachedUtc;
 
         public GameState State { get; private set; } = GameState.NotRunning;
 
@@ -36,12 +43,15 @@ namespace HearthstoneHungary.Core
         {
             lock (_lock)
             {
-                var processId = FindProcessId();
+                var processId = FindProcessId(out var hasWindow);
                 if (processId == 0)
                 {
                     Reset();
                     return State = GameState.NotRunning;
                 }
+                // A játék még indul (nincs ablaka): még nem csatlakozunk, hogy a félig betöltött állapotot ne jegyezzük meg.
+                if (!hasWindow && _mindVision == null)
+                    return State = GameState.Loading;
 
                 if (_mindVision == null || _processId != processId)
                 {
@@ -50,6 +60,7 @@ namespace HearthstoneHungary.Core
                     {
                         _mindVision = new MindVision(OnLibraryMessage, inputProcessId: processId);
                         _processId = processId;
+                        _attachedUtc = DateTime.UtcNow;
                         Log.Info($"Csatlakozva a Hearthstone-hoz (PID {processId}).");
                     }
                     catch (Exception ex)
@@ -69,6 +80,13 @@ namespace HearthstoneHungary.Core
                 catch (Exception ex)
                 {
                     Log.Warn("Hiba a gyűjtemény állapotának olvasásakor: " + ex.Message);
+                    Reset();
+                    return State = GameState.Loading;
+                }
+                if (!ready && State != GameState.Ready && DateTime.UtcNow - _attachedUtc >= ReattachAfter)
+                {
+                    // Még mindig nem látjuk a gyűjteményt: a következő körben új olvasóval próbáljuk.
+                    Log.Info("A gyűjtemény még nem olvasható, újracsatlakozás a Hearthstone-hoz.");
                     Reset();
                     return State = GameState.Loading;
                 }
@@ -117,12 +135,25 @@ namespace HearthstoneHungary.Core
             }
         }
 
-        private static int FindProcessId()
+        /// <param name="hasWindow">Van-e már ablaka a játéknak (induláskor egy ideig nincs).</param>
+        private static int FindProcessId(out bool hasWindow)
         {
+            hasWindow = false;
             var processes = Process.GetProcessesByName(ProcessName);
             try
             {
-                return processes.Length > 0 ? processes[0].Id : 0;
+                if (processes.Length == 0)
+                    return 0;
+                try
+                {
+                    hasWindow = processes[0].MainWindowHandle != IntPtr.Zero;
+                }
+                catch (Exception)
+                {
+                    // ha nem kérdezhető le, ne akadályozza a csatlakozást
+                    hasWindow = true;
+                }
+                return processes[0].Id;
             }
             finally
             {

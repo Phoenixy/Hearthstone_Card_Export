@@ -1,3 +1,5 @@
+v3.1.0.0 - 2026/11/24
+- Az app mostantól telepíthető.
 v3.0.2.0 - 2026/11/23
 - Háttéer csere, plugin helyett alkalmazás. 
 v3.0.0 - 2026/11/23

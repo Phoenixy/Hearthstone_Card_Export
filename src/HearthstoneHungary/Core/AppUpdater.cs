@@ -91,6 +91,7 @@ namespace HearthstoneHungary.Core
                     SetState(UpdateState.Checking, $"v{release.Version} letöltése…");
                 var files = await DownloadAndValidateAsync(release);
                 Install(targetDir, files);
+                InstallerRegistry.UpdateDisplayVersion(targetDir, release.Version);
 
                 InstalledVersion = release.Version;
                 Log.Info($"v{release.Version} telepítve ide: {targetDir}");

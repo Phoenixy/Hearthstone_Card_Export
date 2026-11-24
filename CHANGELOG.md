@@ -1,6 +1,7 @@
 v3.2.0.0 - 2026/11/24
 - ÚJDONSÁG: Sötét megjelenés. Az alkalmazás a Windows beállítását követi (Beállítások → Személyre szabás → Színek → Alkalmazás mód), és átállításkor azonnal vált, a címsorral együtt.
 - Új jelölőnégyzetek és tokenmező, amelyek mindkét megjelenésben jól láthatók.
+- Telepített változatnál az automatikus frissítés után a Windows Programok listája is az új verziót mutatja.
 v3.1.0.0 - 2026/11/24
 - Az app mostantól telepíthető.
 v3.0.2.0 - 2026/11/23

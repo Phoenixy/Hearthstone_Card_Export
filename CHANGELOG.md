@@ -1,3 +1,6 @@
+v4.0.0.0 - 2026/11/24
+- Az első stabil változat: gyűjtemény feltöltése, paklik feltöltése, meccs statisztika, aréna futamok és hírértesítés. Az alkalmazás mostantól minden Hearthstone Hungary felhasználónak elérhető.
+- Új, éles ikon minden méretben (16-tól 256 pixelig): a tálcán, a Start menüben, az asztalon és a telepítőben sem homályos többé. A tálcaikon a rendszer kis ikon méretét használja.
 v3.5.1.0 - 2026/11/24
 - A Statisztika és a Beállítások fülön link visz a Hearthstone Hungary profilod beállításaihoz, ahol megadhatod, mi jelenjen meg az oldalon a meccseidből (statisztika a pakliknál, aréna paklik, aréna futamok), és ki lássa.
 - JAVÍTÁS: Ha az alkalmazás a Hearthstone indulásának legelején csatlakozott, előfordult, hogy a főmenü betöltése után is „Várakozás a főmenüre…” maradt, és csak a játék újraindítása segített. Mostantól megvárja a játék ablakát, és ha 90 másodperc után sem látja a gyűjteményt, magától újracsatlakozik.

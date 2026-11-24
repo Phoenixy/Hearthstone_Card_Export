@@ -88,6 +88,9 @@ ha a token már nem élt.
 
 ### GET – token ellenőrzése
 
+Az alkalmazás indításkor, az ablak megnyitásakor (legfeljebb percenként) és óránként hívja, hogy a profilban
+leválasztott eszközt akkor is észrevegye, ha épp nem tölt fel. 401-re leválasztja magát; hálózati / szerverhibánál nem csinál semmit.
+
 ```
 GET /api/app/collection.php
 X-HSHU-Token: 3f9a...

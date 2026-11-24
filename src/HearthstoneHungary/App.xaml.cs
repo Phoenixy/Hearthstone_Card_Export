@@ -223,7 +223,7 @@ namespace HearthstoneHungary
 
             _trayIcon = new Forms.NotifyIcon
             {
-                Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetEntryAssembly().Location),
+                Icon = LoadTrayIcon(),
                 Text = "Hearthstone Hungary",
                 ContextMenuStrip = menu,
                 Visible = true
@@ -241,6 +241,27 @@ namespace HearthstoneHungary
                 else
                     ShowMainWindow();
             };
+        }
+
+        /// <summary>
+        /// A tálcaikon a rendszer kis ikon méretében (100%-on 16, 150%-on 24 px) az .ico megfelelő képéből, hogy ne a 32 px-es legyen kicsinyítve.
+        /// </summary>
+        private static System.Drawing.Icon LoadTrayIcon()
+        {
+            try
+            {
+                var resource = GetResourceStream(new Uri("pack://application:,,,/Resources/hshu-icon.ico", UriKind.Absolute));
+                if (resource != null)
+                {
+                    using (var stream = resource.Stream)
+                        return new System.Drawing.Icon(stream, Forms.SystemInformation.SmallIconSize);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("A tálcaikon nem tölthető be: " + ex.Message);
+            }
+            return System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetEntryAssembly().Location);
         }
 
         /// <param name="url">Ha meg van adva, az értesítésre kattintva ez nyílik meg a böngészőben.</param>

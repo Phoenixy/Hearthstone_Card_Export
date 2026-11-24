@@ -80,7 +80,7 @@ Egy IP 10 percen belül legfeljebb 10 összekötést indíthat (utána 429).
 |---|---|---|
 | 200 | `{"ok":true,"status":"pending"}` | vár, és újra kérdez |
 | 200 | `{"ok":true,"status":"approved","token":"…","user":"PHOENIX"}` | elmenti a tokent |
-| 403 | `denied` (elutasította) / `no_access` (nem Premium) | kiírja a `message`-et, vége |
+| 403 | `denied` (elutasította) | kiírja a `message`-et, vége |
 | 409 | `limit` (már 5 eszköz) | kiírja a `message`-et, vége |
 | 410 | `expired` (lejárt, vagy a tokent már kiadtuk) | kiírja a `message`-et, vége |
 | 429, 5xx, hálózati hiba | | a következő körben újrapróbálja |

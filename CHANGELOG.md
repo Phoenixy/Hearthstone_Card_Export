@@ -1,3 +1,5 @@
+v3.2.1.0 - 2026/11/24
+- Ha az eszközt a weboldalon választod le, az alkalmazás ezt indításkor, az ablak megnyitásakor és óránként is ellenőrzi, és tálcaértesítéssel jelzi (eddig csak a következő feltöltéskor derült ki).
 v3.2.0.0 - 2026/11/24
 - ÚJDONSÁG: Sötét megjelenés. Az alkalmazás a Windows beállítását követi (Beállítások → Személyre szabás → Színek → Alkalmazás mód), és átállításkor azonnal vált, a címsorral együtt.
 - Új jelölőnégyzetek és tokenmező, amelyek mindkét megjelenésben jól láthatók.

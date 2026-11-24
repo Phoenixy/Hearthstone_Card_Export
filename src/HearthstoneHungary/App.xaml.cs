@@ -22,6 +22,12 @@ namespace HearthstoneHungary
         /// <summary>Futó játéknál ilyen gyakran olvassuk ki a gyűjteményt (és töltjük fel, ha változott).</summary>
         private static readonly TimeSpan AutoSyncInterval = TimeSpan.FromMinutes(2);
 
+        /// <summary>Ilyen gyakran nézzük meg a háttérben, hogy nem választották-e le az eszközt a profilban.</summary>
+        private static readonly TimeSpan LinkCheckInterval = TimeSpan.FromHours(1);
+
+        /// <summary>Az ablak megnyitásakor legfeljebb ilyen gyakran ellenőrizzük az összekötést.</summary>
+        private static readonly TimeSpan LinkCheckOnShowInterval = TimeSpan.FromMinutes(1);
+
         private Mutex _mutex;
         private EventWaitHandle _showEvent;
         private RegisteredWaitHandle _showWait;
@@ -81,6 +87,7 @@ namespace HearthstoneHungary
             Sync = new CollectionSync(Settings, Reader);
             Updater = new AppUpdater(Settings);
             Sync.Uploaded += message => Dispatcher.BeginInvoke(new Action(() => ShowBalloon("Gyűjtemény feltöltve", message)));
+            Sync.LinkLost += message => Dispatcher.BeginInvoke(new Action(() => ShowBalloon("Leválasztva", message)));
             Updater.StatusChanged += () => Dispatcher.BeginInvoke(new Action(OnUpdaterStatusChanged));
 
             CreateTrayIcon();
@@ -118,6 +125,9 @@ namespace HearthstoneHungary
                     _lastAutoSyncUtc = DateTime.UtcNow;
                     await Sync.SyncAsync(SyncTrigger.Automatic);
                 }
+
+                // Indításkor (az első körben) és óránként: nem választották-e le az eszközt a profilban.
+                await Sync.CheckLinkAsync(LinkCheckInterval);
 
                 if (Settings.AutoUpdate && Updater.IsCheckDue)
                     await Updater.CheckAndInstallAsync(manual: false);
@@ -161,6 +171,8 @@ namespace HearthstoneHungary
             if (_window.WindowState == WindowState.Minimized)
                 _window.WindowState = WindowState.Normal;
             _window.Activate();
+            // A megnyitott ablak friss állapotot mutasson (a profilban közben leválaszthatták).
+            _ = Sync.CheckLinkAsync(LinkCheckOnShowInterval);
         }
 
         /// <summary>Az ablak bezárásakor: a program a tálcán fut tovább.</summary>

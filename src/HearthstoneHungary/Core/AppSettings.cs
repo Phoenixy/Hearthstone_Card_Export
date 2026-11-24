@@ -23,6 +23,14 @@ namespace HearthstoneHungary.Core
         /// <summary>Indulás a Windows-szal (a tálcára, ablak nélkül).</summary>
         public bool StartWithWindows { get; set; } = true;
 
+        /// <summary>Tálcaértesítés, ha új hír jelenik meg a hearthstonehungary.hu-n.</summary>
+        public bool NewsNotifications { get; set; } = true;
+
+        /// <summary>A legújabb már látott hír megjelenési ideje és azonosítója (az ennél újabbakról szólunk).</summary>
+        public DateTime LastNewsDateUtc { get; set; }
+
+        public int LastNewsId { get; set; }
+
         /// <summary>Megmutattuk-e már, hogy bezáráskor a program a tálcán fut tovább.</summary>
         public bool TrayHintShown { get; set; }
 

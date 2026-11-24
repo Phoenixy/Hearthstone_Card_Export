@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using HearthstoneHungary.Core;
@@ -20,6 +19,7 @@ namespace HearthstoneHungary
             AutoUploadCheck.IsChecked = _app.Settings.AutoUpload;
             StartWithWindowsCheck.IsChecked = _app.Settings.StartWithWindows;
             AutoUpdateCheck.IsChecked = _app.Settings.AutoUpdate;
+            NewsCheck.IsChecked = _app.Settings.NewsNotifications;
             VersionText.Text = $"Verzió: v{App.Version}";
 
             _app.Sync.StatusChanged += OnSyncStatusChanged;
@@ -121,6 +121,17 @@ namespace HearthstoneHungary
             _app.Settings.StartWithWindows = StartWithWindowsCheck.IsChecked == true;
             _app.Settings.Save();
             WindowsStartup.Apply(_app.Settings.StartWithWindows);
+        }
+
+        private void NewsCheck_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_initializing)
+                return;
+            _app.Settings.NewsNotifications = NewsCheck.IsChecked == true;
+            _app.Settings.Save();
+            // bekapcsoláskor csak az ezután megjelenő hírekről szólunk
+            if (_app.Settings.NewsNotifications)
+                _app.News.ResetBaseline();
         }
 
         private void AutoUpdateCheck_Changed(object sender, RoutedEventArgs e)
@@ -236,16 +247,6 @@ namespace HearthstoneHungary
         private void ShowError(string message) =>
             MessageBox.Show(this, message, "Hiba", MessageBoxButton.OK, MessageBoxImage.Error);
 
-        private static void OpenUrl(string url)
-        {
-            try
-            {
-                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Nem sikerült megnyitni: " + url + " – " + ex.Message);
-            }
-        }
+        private static void OpenUrl(string url) => App.OpenInBrowser(url);
     }
 }

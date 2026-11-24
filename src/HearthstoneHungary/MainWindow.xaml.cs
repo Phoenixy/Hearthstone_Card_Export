@@ -11,6 +11,10 @@ namespace HearthstoneHungary
     {
         private const string NoDecksText = "Még nem láttam paklit. Indíts el egy meccset a Hearthstone-ban, és a paklid megjelenik itt. (Ha most telepítetted az alkalmazást, előbb indítsd újra a játékot.)";
 
+        private const string NoGamesText = "Még nincs rögzített meccs. Játssz egy Ranked, Casual vagy aréna meccset, és az eredménye megjelenik itt. (Ha most telepítetted az alkalmazást, előbb indítsd újra a játékot.)";
+        private const int MaxStatsModes = 4;
+        private const int MaxRecentGames = 4;
+
         private readonly App _app;
         private bool _initializing = true;
         private bool _fillingDecks;
@@ -27,12 +31,14 @@ namespace HearthstoneHungary
             StartWithWindowsCheck.IsChecked = _app.Settings.StartWithWindows;
             AutoUpdateCheck.IsChecked = _app.Settings.AutoUpdate;
             NewsCheck.IsChecked = _app.Settings.NewsNotifications;
+            TrackGamesCheck.IsChecked = _app.Settings.TrackGames;
             VersionText.Text = $"Verzió: v{App.Version}";
 
             _app.Sync.StatusChanged += OnSyncStatusChanged;
             _app.Updater.StatusChanged += OnUpdaterStatusChanged;
             _app.GameStateChanged += RefreshGameUi;
             _app.Decks.Changed += OnDecksChanged;
+            _app.Games.Changed += OnGamesChanged;
             ThemeManager.Changed += OnThemeChanged;
             SourceInitialized += (sender, args) => ThemeManager.ApplyTitleBar(this);
             Closed += (sender, args) =>
@@ -41,6 +47,7 @@ namespace HearthstoneHungary
                 _app.Updater.StatusChanged -= OnUpdaterStatusChanged;
                 _app.GameStateChanged -= RefreshGameUi;
                 _app.Decks.Changed -= OnDecksChanged;
+                _app.Games.Changed -= OnGamesChanged;
                 ThemeManager.Changed -= OnThemeChanged;
             };
 
@@ -68,6 +75,8 @@ namespace HearthstoneHungary
         private void OnUpdaterStatusChanged() => Dispatcher.BeginInvoke(new Action(RefreshUpdateUi));
 
         private void OnDecksChanged() => Dispatcher.BeginInvoke(new Action(RefreshDeckUi));
+
+        private void OnGamesChanged() => Dispatcher.BeginInvoke(new Action(RefreshStatsUi));
 
         // A színeket a DynamicResource-ok maguktól követik, csak a címsort kell átállítani.
         private void OnThemeChanged() => ThemeManager.ApplyTitleBar(this);
@@ -108,16 +117,18 @@ namespace HearthstoneHungary
             UploadNowButton.IsEnabled = !busy;
             UploadStatusText.Text = _app.Sync.StatusText;
             RefreshDeckUi();
+            RefreshStatsUi();
         }
 
         /// <summary>Fülváltás: a kiválasztott rész látszik, a többi Hidden (a helyük megmarad, így az ablak mérete nem változik).</summary>
         private void Tab_Checked(object sender, RoutedEventArgs e)
         {
             // Az InitializeComponent közben is lefut, amikor a panelek még nem léteznek.
-            if (CollectionPanel == null || DecksPanel == null || SettingsPanel == null)
+            if (CollectionPanel == null || DecksPanel == null || StatsPanel == null || SettingsPanel == null)
                 return;
             CollectionPanel.Visibility = CollectionTab.IsChecked == true ? Visibility.Visible : Visibility.Hidden;
             DecksPanel.Visibility = DecksTab.IsChecked == true ? Visibility.Visible : Visibility.Hidden;
+            StatsPanel.Visibility = StatsTab.IsChecked == true ? Visibility.Visible : Visibility.Hidden;
             SettingsPanel.Visibility = SettingsTab.IsChecked == true ? Visibility.Visible : Visibility.Hidden;
         }
 
@@ -194,6 +205,45 @@ namespace HearthstoneHungary
             }
         }
 
+        /// <summary>A Statisztika fül: módonként a győzelmek és vereségek, alatta a legutóbbi meccsek.</summary>
+        private void RefreshStatsUi()
+        {
+            var games = _app.Games.Games;
+            var tracking = _app.Settings.TrackGames;
+            if (games.Count == 0)
+            {
+                StatsSummaryText.Text = tracking ? NoGamesText : "A meccsek rögzítése ki van kapcsolva (Beállítások fül).";
+                StatsRecentTitle.Visibility = StatsRecentText.Visibility = Visibility.Collapsed;
+                StatsStatusText.Text = "";
+                return;
+            }
+
+            // módonként egy sor; a legtöbbet játszott mód elöl
+            var summary = games
+                .GroupBy(g => GameInfo.ModeName(g.GameType, g.FormatType))
+                .OrderByDescending(g => g.Count())
+                .Take(MaxStatsModes)
+                .Select(g =>
+                {
+                    var wins = g.Count(x => x.Result == "win");
+                    var losses = g.Count(x => x.Result == "loss");
+                    var rate = wins + losses > 0 ? $" ({Math.Round(100.0 * wins / (wins + losses))}%)" : "";
+                    return $"{g.Key}: {wins} győzelem, {losses} vereség{rate}";
+                });
+            StatsSummaryText.Text = string.Join(Environment.NewLine, summary);
+
+            StatsRecentTitle.Visibility = StatsRecentText.Visibility = Visibility.Visible;
+            StatsRecentText.Text = string.Join(Environment.NewLine, games.Take(MaxRecentGames).Select(g =>
+                $"{g.StartedUtc.ToLocalTime():MM.dd. HH:mm} · {GameInfo.ResultName(g.Result)} · {GameInfo.HeroClass(g.PlayerHero)} – {GameInfo.HeroClass(g.OpponentHero)}"
+                + (string.IsNullOrEmpty(g.DeckName) ? "" : " · " + g.DeckName)));
+
+            var pending = _app.Games.PendingCount;
+            StatsStatusText.Text = !tracking ? "A meccsek rögzítése ki van kapcsolva (Beállítások fül)."
+                : !_app.Sync.IsLinked ? "A meccsek csak ezen a gépen vannak meg. Kösd össze az alkalmazást a Hearthstone Hungary profiloddal, és feltöltődnek."
+                : pending > 0 ? $"{pending} meccs feltöltésre vár."
+                : "Minden meccs fel van töltve a Hearthstone Hungary profilodba.";
+        }
+
         private void RefreshUpdateUi()
         {
             UpdateStatusText.Text = _app.Updater.StatusText;
@@ -228,6 +278,15 @@ namespace HearthstoneHungary
             // bekapcsoláskor csak az ezután megjelenő hírekről szólunk
             if (_app.Settings.NewsNotifications)
                 _app.News.ResetBaseline();
+        }
+
+        private void TrackGamesCheck_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_initializing)
+                return;
+            _app.Settings.TrackGames = TrackGamesCheck.IsChecked == true;
+            _app.Settings.Save();
+            RefreshStatsUi();
         }
 
         private void AutoUpdateCheck_Changed(object sender, RoutedEventArgs e)

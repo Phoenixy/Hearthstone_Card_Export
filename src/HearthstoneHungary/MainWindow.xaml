@@ -233,6 +233,7 @@
                 <StackPanel Orientation="Horizontal">
                     <RadioButton x:Name="CollectionTab" Style="{StaticResource TabButton}" GroupName="MainTabs" Content="Gyűjtemény" IsChecked="True" Checked="Tab_Checked"/>
                     <RadioButton x:Name="DecksTab" Style="{StaticResource TabButton}" GroupName="MainTabs" Content="Paklik" Checked="Tab_Checked"/>
+                    <RadioButton x:Name="StatsTab" Style="{StaticResource TabButton}" GroupName="MainTabs" Content="Statisztika" Checked="Tab_Checked"/>
                     <RadioButton x:Name="SettingsTab" Style="{StaticResource TabButton}" GroupName="MainTabs" Content="Beállítások" Checked="Tab_Checked"/>
                 </StackPanel>
             </Border>
@@ -299,6 +300,20 @@
 
             </StackPanel>
 
+            <StackPanel x:Name="StatsPanel" Visibility="Hidden">
+            <!-- A lejátszott meccsek a játék naplójából -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource CardTitle}" Text="Győzelmek és vereségek"/>
+                    <TextBlock x:Name="StatsSummaryText" Style="{StaticResource BodyText}"/>
+                    <TextBlock x:Name="StatsRecentTitle" Style="{StaticResource BodyText}" FontWeight="SemiBold" Margin="0,10,0,2" Text="Legutóbbi meccsek"/>
+                    <TextBlock x:Name="StatsRecentText" Style="{StaticResource MutedText}"/>
+                    <TextBlock x:Name="StatsStatusText" Style="{StaticResource MutedText}" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+
+            </StackPanel>
+
             <StackPanel x:Name="SettingsPanel" Visibility="Hidden">
             <!-- Beállítások -->
             <Border Style="{StaticResource Card}">
@@ -310,6 +325,8 @@
                               Checked="StartWithWindowsCheck_Changed" Unchecked="StartWithWindowsCheck_Changed"/>
                     <CheckBox x:Name="NewsCheck" Margin="0,6,0,0" Content="Értesítés, ha új hír jelenik meg a Hearthstone Hungary-n"
                               Checked="NewsCheck_Changed" Unchecked="NewsCheck_Changed"/>
+                    <CheckBox x:Name="TrackGamesCheck" Margin="0,6,0,0" Content="Meccsek eredményének rögzítése és feltöltése (statisztika)"
+                              Checked="TrackGamesCheck_Changed" Unchecked="TrackGamesCheck_Changed"/>
                     <CheckBox x:Name="AutoUpdateCheck" Margin="0,6,0,0" Content="Automatikus frissítés (ajánlott)"
                               Checked="AutoUpdateCheck_Changed" Unchecked="AutoUpdateCheck_Changed"/>
                 </StackPanel>

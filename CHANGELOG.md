@@ -1,3 +1,6 @@
+v3.5.0.0 - 2026/11/24
+- ÚJDONSÁG: Statisztika. Az alkalmazás a játék naplójából rögzíti a Ranked, Casual és aréna meccseid eredményét (mód, pakli, a két kaszt, győzelem vagy vereség), és feltölti a Hearthstone Hungary profilodba. Az új Statisztika fülön módonként látod a győzelmeket és vereségeket, alatta a legutóbbi meccseket. A Brawl, a baráti és a gép elleni meccsek nem számítanak. A Beállításoknál kikapcsolható.
+- A hírek ellenőrzése 15 perc helyett óránként történik.
 v3.4.1.0 - 2026/11/24
 - Az ablak fülekre tagolódik (Gyűjtemény, Paklik, Beállítások), így nem lesz túl magas, és az új funkciók külön fület kaphatnak.
 v3.4.0.0 - 2026/11/24

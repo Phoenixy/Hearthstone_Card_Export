@@ -26,6 +26,9 @@ namespace HearthstoneHungary.Core
         /// <summary>Tálcaértesítés, ha új hír jelenik meg a hearthstonehungary.hu-n.</summary>
         public bool NewsNotifications { get; set; } = true;
 
+        /// <summary>A lejátszott meccsek rögzítése a játék naplójából és feltöltése a HSHU-ra (statisztika).</summary>
+        public bool TrackGames { get; set; } = true;
+
         /// <summary>A legújabb már látott hír megjelenési ideje és azonosítója (az ennél újabbakról szólunk).</summary>
         public DateTime LastNewsDateUtc { get; set; }
 

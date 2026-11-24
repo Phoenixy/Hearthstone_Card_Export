@@ -50,6 +50,7 @@ namespace HearthstoneHungary
         internal AppUpdater Updater { get; private set; }
         internal NewsWatcher News { get; private set; }
         internal DeckTracker Decks { get; private set; }
+        internal GameTracker Games { get; private set; }
 
         /// <summary>A Hearthstone állapota (a UI szálon frissül).</summary>
         internal GameState GameState => _lastGameState;
@@ -91,6 +92,7 @@ namespace HearthstoneHungary
             Updater = new AppUpdater(Settings);
             News = new NewsWatcher(Settings);
             Decks = new DeckTracker(Settings);
+            Games = new GameTracker(Settings);
             // A paklikhoz (és később a meccsek eredményéhez) a játék naplója kell; a játék az új beállítást a következő indításakor veszi át.
             HearthstoneLogs.EnsureLoggingEnabled();
             News.NewsFound += (item, more) => Dispatcher.BeginInvoke(new Action(() => ShowBalloon(
@@ -139,8 +141,16 @@ namespace HearthstoneHungary
                 await Sync.CheckLinkAsync(LinkCheckInterval);
 
                 // A játék naplójából a paklik (futó játéknál; a fájl csak akkor olvasódik újra, ha változott).
+                var installDir = state != GameState.NotRunning ? await Task.Run(() => HearthstoneLogs.FindInstallDirectory()) : null;
                 if (state != GameState.NotRunning)
-                    await Task.Run(() => Decks.Refresh(HearthstoneLogs.FindInstallDirectory()));
+                    await Task.Run(() => Decks.Refresh(installDir));
+
+                // A lejátszott meccsek a Power.log-ból. Akkor is megnézzük, ha a játék már nem fut: a bezárás előtti utolsó meccs így sem vész el.
+                if (Settings.TrackGames)
+                {
+                    await Task.Run(() => Games.Refresh(installDir));
+                    await Games.UploadPendingAsync();
+                }
 
                 if (Settings.NewsNotifications && News.IsCheckDue)
                     await News.CheckAsync();

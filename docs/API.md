@@ -126,6 +126,40 @@ X-HSHU-Token: 3f9a...
   csak üzenetet ír ki), így egy idegen link nem tud a felhasználó nevében paklit létrehozni. Óránként legfeljebb 30 jegy kérhető.
 - Hibák: 400 `bad_deck` (nem pakli kód), 401 (leválasztott eszköz), 403 `no_access`, 429 `rate_limited`.
 
+### Meccsek feltöltése (`/api/app/games.php`)
+
+Az alkalmazás a játék `Power.log` naplójából olvassa ki a befejezett meccseket (lásd `Core/PowerLogParser.cs`, `Core/GameTracker.cs`),
+a paklit pedig a `Decks.log`-ból (a meccs előtti utolsó „Finding Game With Deck” / „Starting Arena Game With Deck” blokk).
+
+```
+POST /api/app/games.php
+X-HSHU-Token: 3f9a...
+```
+
+```json
+{ "format": 1, "app_version": "3.5.0", "games": [ {
+    "uid": "86f7…(40 hexa)", "played_at": "2026-11-24T15:13:34Z", "duration": 459,
+    "game_type": "GT_RANKED", "format_type": "FT_STANDARD", "result": "loss", "first": false,
+    "player_hero": "HERO_05", "opponent_hero": "HERO_01u",
+    "deck_id": 2777523599, "deck_name": "Pakli neve", "deckstring": "AAECAR8E…", "build": 255790 } ] }
+```
+
+```json
+{ "ok": true, "saved": 1, "duplicates": 0, "skipped": 0 }
+```
+
+- `uid`: a naplómappa neve + a meccs kezdésének időbélyege (SHA-1). Egy meccs felhasználónként csak egyszer kerül be (`duplicates`),
+  ezért az alkalmazás újraküldi, amire nem kapott választ.
+- `game_type` / `format_type`: ahogy a napló kiírja. Csak a `GT_RANKED`, a `GT_CASUAL` és az aréna (`…ARENA…`, az Underground külön mód)
+  számít; a többi kimarad (`skipped`). Az alkalmazás ezeket el sem küldi.
+- `result`: `win` / `loss` / `tie`. `first`: `true`, ha a játékos kezdett, `false`, ha érmével, `null`, ha nem derült ki.
+- `player_hero` / `opponent_hero`: a hősök kártyaazonosítója a meccs elején; az oldal ebből számolja a kasztot (`HERO_05…` → Hunter).
+- `deck_id`, `deck_name`, `deckstring`: a játékbeli pakli (hiányozhat). Az oldal a kód fő listájából lenyomatot számol
+  (lapnevek + darabszámok), ezzel köthető a meccs az oldalra feltöltött paklihoz.
+- Kérésenként legfeljebb 50 meccs, felhasználónként naponta 300. A 60 napnál régebbi vagy jövőbeli meccs hibás adat (400).
+- Hibák: 400 `bad_games` (az alkalmazás nem küldi újra), 401 (leválasztott eszköz), 403 `no_access`, 426 (ismeretlen `format`), 429.
+- Tárolás: `jsweb_app_games` tábla.
+
 ### Hírek (`/api/app/news.php`)
 
 `GET`, token nélkül (nyilvános adat). A megjelenés ideje szerint a legújabb 5 cikk; a későbbi szerkesztés nem számít új hírnek.
@@ -134,7 +168,7 @@ X-HSHU-Token: 3f9a...
 { "ok": true, "items": [ { "id": 5599, "title": "Patch 37.0.3 hotfixek…", "url": "https://hearthstonehungary.hu/node/…", "date": "2026-11-17T22:00:00+01:00" } ] }
 ```
 
-Az alkalmazás 15 percenként kérdezi le (ha az értesítés be van kapcsolva). Az első alkalommal csak megjegyzi a legújabb
+Az alkalmazás óránként kérdezi le (ha az értesítés be van kapcsolva). Az első alkalommal csak megjegyzi a legújabb
 cikket, utána az annál újabbakról küld tálcaértesítést (3 napnál régebbi cikkről nem, pl. ha a gép sokáig ki volt kapcsolva).
 
 ### POST – gyűjtemény feltöltése (format 2)
@@ -197,7 +231,7 @@ Sikeres válasz:
 
 A hearthstonehungary.hu kódjában:
 
-- `api/app/collection.php`: feltöltés. `api/app/link.php`: összekötés és leválasztás. `api/app/deck.php`: pakli küldése. `api/app/news.php`: hírek.
+- `api/app/collection.php`: feltöltés. `api/app/link.php`: összekötés és leválasztás. `api/app/deck.php`: pakli küldése. `api/app/games.php`: meccsek. `api/app/news.php`: hírek.
 - `function/app_function.php`: eszközök és tokenek, összekötési kérések, kártyaazonosító → dbfId, a gyűjtemény mentése.
 - `modules/app_box.php`: az összekötött eszközök a profil Gyűjtemény fülén. `modules/app.php`: a `/app` leírás és a
   `/app/connect/<kód>` jóváhagyó oldal (a POST-ot a `modules/h_404.php` dolgozza fel, mielőtt bármi kiíródna).

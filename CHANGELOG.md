@@ -1,3 +1,5 @@
+v4.0.1.0 - 2026/11/25
+- Érthetőbb beállítás: „Statisztikák mentése és aréna paklik feltöltése”, csillaggal jelölve, hogy a megjelenítést a weboldalon, a profilodban állíthatod.
 v4.0.0.0 - 2026/11/24
 - Az első stabil változat: gyűjtemény feltöltése, paklik feltöltése, meccs statisztika, aréna futamok és hírértesítés. Az alkalmazás mostantól minden Hearthstone Hungary felhasználónak elérhető.
 - Új, éles ikon minden méretben (16-tól 256 pixelig): a tálcán, a Start menüben, az asztalon és a telepítőben sem homályos többé. A tálcaikon a rendszer kis ikon méretét használja.

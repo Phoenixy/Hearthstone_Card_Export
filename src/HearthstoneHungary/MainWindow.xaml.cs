@@ -212,7 +212,7 @@ namespace HearthstoneHungary
             var tracking = _app.Settings.TrackGames;
             if (games.Count == 0)
             {
-                StatsSummaryText.Text = tracking ? NoGamesText : "A meccsek rögzítése ki van kapcsolva (Beállítások fül).";
+                StatsSummaryText.Text = tracking ? NoGamesText : "A statisztikák mentése ki van kapcsolva (Beállítások fül).";
                 StatsRecentTitle.Visibility = StatsRecentText.Visibility = Visibility.Collapsed;
                 StatsStatusText.Text = "";
                 return;
@@ -238,7 +238,7 @@ namespace HearthstoneHungary
                 + (string.IsNullOrEmpty(g.DeckName) ? "" : " · " + g.DeckName)));
 
             var pending = _app.Games.PendingCount;
-            StatsStatusText.Text = !tracking ? "A meccsek rögzítése ki van kapcsolva (Beállítások fül)."
+            StatsStatusText.Text = !tracking ? "A statisztikák mentése ki van kapcsolva (Beállítások fül)."
                 : !_app.Sync.IsLinked ? "A meccsek csak ezen a gépen vannak meg. Kösd össze az alkalmazást a Hearthstone Hungary profiloddal, és feltöltődnek."
                 : pending > 0 ? $"{pending} meccs feltöltésre vár."
                 : "Minden meccs fel van töltve a Hearthstone Hungary profilodba.";

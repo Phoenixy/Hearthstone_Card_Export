@@ -21,6 +21,12 @@ AppName=Hearthstone Hungary
 AppVersion={#AppVersion}
 AppVerName=Hearthstone Hungary {#AppVersion}
 AppPublisher=Hearthstone Hungary
+; A fájl adatai (a kódaláírás ezekre ellenőriz: termék neve és verziója)
+VersionInfoProductName=Hearthstone Hungary
+VersionInfoProductVersion={#AppVersion}
+VersionInfoVersion={#AppVersion}
+VersionInfoCompany=Hearthstone Hungary
+VersionInfoDescription=Hearthstone Hungary telepítő
 AppPublisherURL=https://hearthstonehungary.hu
 AppSupportURL=https://github.com/Phoenixy/Hearthstone_Card_Export
 AppUpdatesURL=https://github.com/Phoenixy/Hearthstone_Card_Export/releases

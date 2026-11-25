@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SignPath artifact configuration (slug: installer): dist\HearthstoneHungary-Setup.exe (Inno Setup), uploaded with "archive: false".
+  The installer is built from the already signed program files.
+  The live configuration is stored in SignPath; this file is the reviewed copy kept under source control.
+-->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <parameters>
+    <!-- a kiadás verziója (pl. 4.0.0), a GitHub Actions adja át -->
+    <parameter name="version" required="true" />
+  </parameters>
+  <pe-file path="HearthstoneHungary-Setup.exe" product-name="Hearthstone Hungary" product-version="${version}">
+    <authenticode-sign/>
+  </pe-file>
+</artifact-configuration>

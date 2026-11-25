@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SignPath artifact configuration (slug: app-zip): dist\HearthstoneHungary.zip, uploaded with "archive: false".
+  Only our own program is signed. UnitySpy*.dll is upstream code (Firestone) and Newtonsoft.Json.dll is already
+  signed by its publisher, so they are left unchanged.
+  The live configuration is stored in SignPath; this file is the reviewed copy kept under source control.
+-->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <parameters>
+    <!-- a kiadás verziója (pl. 4.0.0), a GitHub Actions adja át -->
+    <parameter name="version" required="true" />
+  </parameters>
+  <zip-file path="HearthstoneHungary.zip">
+    <!-- a program ProductVersion-je négytagú (AssemblyInfo.cs: 4.0.0.0) -->
+    <pe-file path="HearthstoneHungary.exe" product-name="Hearthstone Hungary" product-version="${version}.0">
+      <authenticode-sign/>
+    </pe-file>
+  </zip-file>
+</artifact-configuration>
